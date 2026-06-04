@@ -1,0 +1,43 @@
+---
+name: Université libre de Bruxelles
+description: Université libre de Bruxelles public developer/API footprint review for APIs.json cataloging.
+url: https://raw.githubusercontent.com/api-evangelist/ulb/refs/heads/main/review.yml
+created: '2026-06-03'
+modified: '2026-06-03'
+reviews:
+  - date: '2026-06-03'
+    rating: 2
+    summary: >-
+      ULB's only publicly documented API surface is DI-fusion, the institutional
+      research repository. The "DI-fusion Download & API" technical document
+      (PDF, hosted on bib.ulb.be) describes a Scholar export API and a Group
+      export API at difusion-svc.ulb.ac.be, plus a search API, RSS feeds, a
+      sitemap, and an OAI-PMH harvesting service. The Scholar export endpoint
+      was verified live, returning a valid XML publication list (HTTP 200). The
+      VuFind OAI endpoint paths probed returned HTTP 500, so the OAI service is
+      cataloged from documentation rather than a verified live response. An
+      official GitHub organization (github.com/ulb) exists with ~13 mostly
+      departmental repos. No public student/SIS, timetable, library discovery,
+      or SSO API documentation was found. No fabricated endpoints are included.
+    endpoints:
+      - url: https://www.ulb.be/en
+        status: 200
+        note: Official ULB website (English homepage).
+      - url: https://difusion-svc.ulb.ac.be/scholar?scholarID=19262&scholarInst=ULB&groupBy=genredifusion
+        status: 200
+        note: DI-fusion Scholar export API returns live XML publication list.
+      - url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+        status: 200
+        note: DI-fusion Download & API technical documentation (PDF, 15 pages).
+      - url: https://bib.ulb.be/en/find-documents/di-fusion
+        status: 200
+        note: DI-fusion institutional repository overview page.
+      - url: https://difusion.ulb.ac.be/vufind/OAI/Server?verb=Identify
+        status: 500
+        note: VuFind OAI-PMH path probed returned HTTP 500; OAI cataloged from docs.
+      - url: https://github.com/ulb
+        status: 200
+        note: Official ULB GitHub organization (~13 repos, mostly departmental).
+      - url: https://be.linkedin.com/school/universite-libre-de-bruxelles/
+        status: 200
+        note: Official ULB LinkedIn school page.

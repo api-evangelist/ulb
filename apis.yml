@@ -1,0 +1,90 @@
+---
+aid: ulb
+name: Université libre de Bruxelles
+description: >-
+  Université libre de Bruxelles (ULB) is a major French-speaking research
+  university in Brussels, Belgium, ranked #230 in the QS World University
+  Rankings 2025. Its public, documented developer footprint is centered on
+  DI-fusion, the university's institutional research repository, which exposes
+  a documented HTTP export API for scholar and group publication lists, a
+  search interface, RSS feeds, and an OAI-PMH harvesting service for metadata.
+  ULB also maintains an official GitHub organization for departmental and
+  research code. Beyond these, most ULB systems (student/SIS portals, library
+  discovery, SSO) are gated and not publicly documented as APIs.
+type: Index
+position: Consumer
+access: 3rd-Party
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/ulb/refs/heads/main/apis.yml
+tags:
+  - Education
+  - Higher Education
+  - University
+  - Research
+  - Open Access
+  - Institutional Repository
+  - Belgium
+created: '2026-06-03'
+modified: '2026-06-03'
+specificationVersion: '0.19'
+apis:
+  - aid: ulb:difusion-scholar
+    name: DI-fusion Scholar Export API
+    description: >-
+      Documented HTTP GET API that exports the publication list for a given
+      ULB scholar (identified by matricule or DAI). Supports output formats
+      including APA, BibTeX, RIS, CSV, xml-brief, xml-brief-ext and xml-full,
+      with grouping, role filtering, markup and language options. Returns live
+      XML/text bibliographic data.
+    humanURL: https://bib.ulb.be/en/find-documents/di-fusion
+    baseURL: https://difusion-svc.ulb.ac.be/scholar
+    tags: [ Research, Open Access, Institutional Repository, Bibliography ]
+    properties:
+      - type: Documentation
+        url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+  - aid: ulb:difusion-group
+    name: DI-fusion Group Export API
+    description: >-
+      Documented HTTP GET API that exports the publication list for a group of
+      ULB scholars, defined either by a valid group ID or a list of scholar
+      IDs. Shares output formats and options with the Scholar export API.
+    humanURL: https://bib.ulb.be/en/find-documents/di-fusion
+    baseURL: https://difusion-svc.ulb.ac.be/group
+    tags: [ Research, Open Access, Institutional Repository, Bibliography ]
+    properties:
+      - type: Documentation
+        url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+  - aid: ulb:difusion-oai
+    name: DI-fusion OAI-PMH Harvesting Service
+    description: >-
+      ULB's DI-fusion institutional repository documents an OAI-PMH harvesting
+      service allowing third parties to harvest metadata for non-profit
+      purposes (provided the OAI identifier or source link is indicated).
+      DI-fusion is registered in OpenDOAR, ROAR and Sherpa as an OAI-PMH
+      compliant repository. The repository runs on VuFind; specific OAI base
+      URLs were not returning a stable public response at review time.
+    humanURL: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+    tags: [ Research, Open Access, OAI-PMH, Metadata Harvesting ]
+    properties:
+      - type: Documentation
+        url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+common:
+  - type: Website
+    url: https://www.ulb.be/en
+  - type: GitHub
+    url: https://github.com/ulb
+  - type: LinkedIn
+    url: https://be.linkedin.com/school/universite-libre-de-bruxelles/
+  - type: SourceCode
+    url: https://github.com/ulb
+  - type: Plans
+    url: plans/ulb-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/ulb-rate-limits.yml
+  - type: FinOps
+    url: finops/ulb-finops.yml
+  - type: Review
+    url: review.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
