@@ -1,0 +1,68 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "ulb": "https://www.ulb.be/ns#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "name": "schema:name",
+    "url": "schema:url",
+    "description": "schema:description",
+    "institution": {
+      "@id": "schema:CollegeOrUniversity",
+      "@type": "@id"
+    },
+    "sameAs": {
+      "@id": "schema:sameAs",
+      "@type": "@id"
+    },
+    "api": {
+      "@id": "ulb:api",
+      "@container": "@set"
+    },
+    "humanURL": {
+      "@id": "schema:url",
+      "@type": "@id"
+    },
+    "baseURL": {
+      "@id": "schema:contentUrl",
+      "@type": "@id"
+    },
+    "scholar": "ulb:scholar",
+    "group": "ulb:group",
+    "matricule": "ulb:matricule",
+    "dai": "ulb:dai",
+    "format": "ulb:format",
+    "publication": "schema:ScholarlyArticle",
+    "publicationList": "ulb:publicationList",
+    "metadataRecord": "ulb:metadataRecord"
+  },
+  "@type": "CollegeOrUniversity",
+  "@id": "https://www.ulb.be/",
+  "name": "Université libre de Bruxelles",
+  "url": "https://www.ulb.be/en",
+  "description": "Major French-speaking research university in Brussels, Belgium. Public developer footprint centered on DI-fusion, its institutional research repository.",
+  "sameAs": [
+    "https://github.com/ulb",
+    "https://be.linkedin.com/school/universite-libre-de-bruxelles/",
+    "https://en.wikipedia.org/wiki/Universit%C3%A9_libre_de_Bruxelles"
+  ],
+  "api": [
+    {
+      "@type": "WebAPI",
+      "name": "DI-fusion Scholar Export API",
+      "humanURL": "https://bib.ulb.be/en/find-documents/di-fusion",
+      "baseURL": "https://difusion-svc.ulb.ac.be/scholar"
+    },
+    {
+      "@type": "WebAPI",
+      "name": "DI-fusion Group Export API",
+      "humanURL": "https://bib.ulb.be/en/find-documents/di-fusion",
+      "baseURL": "https://difusion-svc.ulb.ac.be/group"
+    },
+    {
+      "@type": "WebAPI",
+      "name": "DI-fusion OAI-PMH Harvesting Service",
+      "humanURL": "https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use"
+    }
+  ]
+}
