@@ -69,6 +69,8 @@ apis:
       - type: Documentation
         url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
 common:
+  - type: DomainSecurity
+    url: security/ulb-domain-security.yml
   - type: Website
     url: https://www.ulb.be/en
   - type: GitHub
