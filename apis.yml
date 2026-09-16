@@ -67,138 +67,157 @@ created: '2026-06-03'
 modified: '2026-08-30'
 specificationVersion: '0.23'
 apis:
-  - aid: ulb:difusion-export
-    name: DI-fusion Export API
-    x-operator: institution
-    x-operator-evidence: >-
-      Runs on difusion-svc.ulb.ac.be, under ULB's own registrable domain ulb.ac.be. Responses are
-      branded from /data/difusion-services/conf/ on ULB's own servers, the service is documented by
-      the Bibliothèques de l'ULB under contact di-fusion@ulb.be, and no other institution in the
-      cohort points at this host or ships this contract. Bespoke ULB engineering, not a vendor
-      platform. Verified live 2026-08-30.
-    description: >-
-      Documented HTTP GET service that exports the publication list of one ULB scholar (identified
-      by matricule or DAI) or of a group of scholars, in APA, BibTeX, RIS, CSV, xml-brief,
-      xml-brief-ext or xml-full, with grouping, role filtering, markup and language options. No
-      credential is required. Verified live on 2026-08-30 for xml-brief, apa/pdf, bibtex, ris and
-      csv; xml-full returns 403 and xml-brief-ext returns 500.
-    humanURL: https://bib.ulb.be/en/find-documents/di-fusion
-    baseURL: https://difusion-svc.ulb.ac.be
-    tags:
-      - Research
-      - Open Access
-      - Institutional Repository
-      - Bibliography
-    properties:
-      - type: OpenAPI
-        url: openapi/ulb-difusion-export-openapi.yml
-      - type: Documentation
-        url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
-      - type: JSONSchema
-        url: json-schema/ulb-difusion-publist-schema.json
-      - type: Vocabulary
-        url: vocabulary/ulb-difusion-vocabulary.yml
-      - type: Examples
-        url: examples/index.yml
-      - type: Errors
-        url: errors/ulb-difusion-errors.yml
-      - type: Rules
-        url: rules/ulb-difusion-rules.yml
-      - type: Authentication
-        url: authentication/ulb-authentication.yml
-      - type: Scopes
-        url: scopes/ulb-scopes.yml
-      - type: Lifecycle
-        url: lifecycle/ulb-lifecycle.yml
-      - type: TermsOfService
-        url: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
-  - aid: ulb:difusion-oai-pmh
-    name: DI-fusion OAI-PMH Harvesting Endpoint
-    x-operator: institution
-    x-operator-evidence: >-
-      Answers on difusion.ulb.ac.be, under ULB's own registrable domain. Its Identify response
-      declares baseURL https://difusion.ulb.ac.be/vufind/OAI/Server and adminEmail
-      di-fusion@ulb.be. The repository software is VuFind, which is open source and self-hosted by
-      ULB, not a vendor SaaS — the deployment, the host and the metadata are ULB's. Verified live
-      2026-08-30.
-    description: >-
-      OAI-PMH 2.0 endpoint for the DI-fusion repository. Answers verb=Identify and
-      verb=ListMetadataFormats with valid protocol documents (advertising oai_dc only), but under
-      HTTP 500 and with an HTML page appended after the closing tag. Every record-bearing verb
-      rejects the advertised metadataPrefix=oai_dc with badArgument "Missing Metadata Prefix", so
-      no metadata can be harvested despite DI-fusion being registered as OAI-PMH compliant in
-      OpenDOAR, ROAR and Sherpa. Recorded as measured, not as advertised.
-    humanURL: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
-    baseURL: https://difusion.ulb.ac.be/vufind/OAI/Server
-    tags:
-      - Research
-      - Open Access
-      - OAI-PMH
-      - Metadata Harvesting
-    properties:
-      - type: OpenAPI
-        url: openapi/ulb-difusion-oai-pmh-openapi.yml
-      - type: Examples
-        url: examples/index.yml
-      - type: Errors
-        url: errors/ulb-difusion-errors.yml
-      - type: Conformance
-        url: conformance/ulb-domain-standards.yml
-      - type: TermsOfService
-        url: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
-  - aid: ulb:difusion-opensearch
-    name: DI-fusion OpenSearch Description
-    x-operator: institution
-    x-operator-evidence: >-
-      Served from difusion.ulb.ac.be and advertised as rel="search" in the DI-fusion HTML head. The
-      VuFind discovery layer is self-hosted by ULB on its own domain. Verified live 2026-08-30.
-    description: >-
-      OpenSearch 1.1 description document for the DI-fusion discovery interface, allowing a client
-      to register DI-fusion as a search provider and construct query URLs programmatically. HTTP
-      200, text/xml, 785 bytes. The ShortName element is empty.
-    humanURL: https://difusion.ulb.ac.be/
-    baseURL: https://difusion.ulb.ac.be/vufind/Search/OpenSearch
-    tags:
-      - Library
-      - Discovery
-      - OpenSearch
-    properties:
-      - type: Examples
-        url: examples/index.yml
-      - type: Conformance
-        url: conformance/ulb-domain-standards.yml
-  - aid: ulb:shibboleth-idp
-    name: ULB Shibboleth Identity Provider (SAML 2.0 metadata)
-    x-operator: institution
-    x-operator-evidence: >-
-      entityID https://auth.ulb.be/idp, on ULB's own registrable domain. The eduGAIN registry lists
-      it with registration authority http://federation.belnet.be/ (Belnet R&E Federation, code
-      BELNET) and display name "Universite Libre de Bruxelles (ULB)", first seen 2021-06-08. An
-      identity provider is institution-operated by definition. Verified live 2026-08-30.
-    description: >-
-      ULB's institutional SAML 2.0 identity provider publishes complete, unauthenticated metadata
-      at https://auth.ulb.be/idp/metadata — IDPSSODescriptor and AttributeAuthorityDescriptor
-      roles, SingleSignOnService, SingleLogoutService and AttributeService endpoints over
-      HTTP-Redirect, HTTP-POST, HTTP-POST-SimpleSign and SOAP bindings, shibmd:Scope ulb.be, the
-      REFEDS Research and Scholarship entity category and the REFEDS SIRTFI assurance
-      certification. It is the machine-readable front door to every gated ULB system and the most
-      complete contract ULB publishes.
-    humanURL: https://auth.ulb.be/
-    baseURL: https://auth.ulb.be/idp/metadata
-    tags:
-      - Identity Federation
-      - SAML
-      - Shibboleth
-      - eduGAIN
-    properties:
-      - type: Examples
-        url: examples/index.yml
-      - type: Authentication
-        url: authentication/ulb-authentication.yml
-      - type: Scopes
-        url: scopes/ulb-scopes.yml
-      - type: Conformance
-        url: conformance/ulb-domain-standards.yml
+- aid: ulb:difusion-opensearch
+  name: DI-fusion OpenSearch Description
+  x-operator: institution
+  x-operator-evidence: >-
+    Served from difusion.ulb.ac.be and advertised as rel="search" in the DI-fusion HTML head. The VuFind
+    discovery layer is self-hosted by ULB on its own domain. Verified live 2026-08-30.
+  description: >-
+    OpenSearch 1.1 description document for the DI-fusion discovery interface, allowing a client to register
+    DI-fusion as a search provider and construct query URLs programmatically. HTTP 200, text/xml, 785
+    bytes. The ShortName element is empty.
+  humanURL: https://difusion.ulb.ac.be/
+  baseURL: https://difusion.ulb.ac.be/vufind/Search/OpenSearch
+  tags:
+  - Library
+  - Discovery
+  - OpenSearch
+  properties:
+  - type: Examples
+    url: examples/index.yml
+  - type: Conformance
+    url: conformance/ulb-domain-standards.yml
+- aid: ulb:shibboleth-idp
+  name: ULB Shibboleth Identity Provider (SAML 2.0 metadata)
+  x-operator: institution
+  x-operator-evidence: >-
+    entityID https://auth.ulb.be/idp, on ULB's own registrable domain. The eduGAIN registry lists it with
+    registration authority http://federation.belnet.be/ (Belnet R&E Federation, code BELNET) and display
+    name "Universite Libre de Bruxelles (ULB)", first seen 2021-06-08. An identity provider is institution-operated
+    by definition. Verified live 2026-08-30.
+  description: >-
+    ULB's institutional SAML 2.0 identity provider publishes complete, unauthenticated metadata at https://auth.ulb.be/idp/metadata
+    — IDPSSODescriptor and AttributeAuthorityDescriptor roles, SingleSignOnService, SingleLogoutService
+    and AttributeService endpoints over HTTP-Redirect, HTTP-POST, HTTP-POST-SimpleSign and SOAP bindings,
+    shibmd:Scope ulb.be, the REFEDS Research and Scholarship entity category and the REFEDS SIRTFI assurance
+    certification. It is the machine-readable front door to every gated ULB system and the most complete
+    contract ULB publishes.
+  humanURL: https://auth.ulb.be/
+  baseURL: https://auth.ulb.be/idp/metadata
+  tags:
+  - Identity Federation
+  - SAML
+  - Shibboleth
+  - eduGAIN
+  properties:
+  - type: Examples
+    url: examples/index.yml
+  - type: Authentication
+    url: authentication/ulb-authentication.yml
+  - type: Scopes
+    url: scopes/ulb-scopes.yml
+  - type: Conformance
+    url: conformance/ulb-domain-standards.yml
+- aid: ulb:ulb-group-api
+  name: Université libre de Bruxelles Group API
+  description: Publication lists for a group of ULB scholars.
+  humanURL: https://bib.ulb.be/en/find-documents/di-fusion
+  baseURL: https://difusion-svc.ulb.ac.be
+  tags:
+  - Group
+  properties:
+  - type: OpenAPI
+    url: openapi/ulb-group-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+  - type: JSONSchema
+    url: json-schema/ulb-difusion-publist-schema.json
+  - type: Vocabulary
+    url: vocabulary/ulb-difusion-vocabulary.yml
+  - type: Examples
+    url: examples/index.yml
+  - type: Errors
+    url: errors/ulb-difusion-errors.yml
+  - type: Rules
+    url: rules/ulb-difusion-rules.yml
+  - type: Authentication
+    url: authentication/ulb-authentication.yml
+  - type: Scopes
+    url: scopes/ulb-scopes.yml
+  - type: Lifecycle
+    url: lifecycle/ulb-lifecycle.yml
+  - type: TermsOfService
+    url: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+  - type: Conformance
+    url: conformance/ulb-domain-standards.yml
+- aid: ulb:ulb-oai-pmh-api
+  name: Université libre de Bruxelles OAI PMH API
+  description: The six OAI-PMH 2.0 protocol verbs.
+  humanURL: https://bib.ulb.be/en/find-documents/di-fusion
+  baseURL: https://difusion-svc.ulb.ac.be
+  tags:
+  - OAI-PMH
+  properties:
+  - type: OpenAPI
+    url: openapi/ulb-oai-pmh-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+  - type: JSONSchema
+    url: json-schema/ulb-difusion-publist-schema.json
+  - type: Vocabulary
+    url: vocabulary/ulb-difusion-vocabulary.yml
+  - type: Examples
+    url: examples/index.yml
+  - type: Errors
+    url: errors/ulb-difusion-errors.yml
+  - type: Rules
+    url: rules/ulb-difusion-rules.yml
+  - type: Authentication
+    url: authentication/ulb-authentication.yml
+  - type: Scopes
+    url: scopes/ulb-scopes.yml
+  - type: Lifecycle
+    url: lifecycle/ulb-lifecycle.yml
+  - type: TermsOfService
+    url: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+  - type: Conformance
+    url: conformance/ulb-domain-standards.yml
+- aid: ulb:ulb-scholar-api
+  name: Université libre de Bruxelles Scholar API
+  description: Publication lists for one identified ULB scholar.
+  humanURL: https://bib.ulb.be/en/find-documents/di-fusion
+  baseURL: https://difusion-svc.ulb.ac.be
+  tags:
+  - Scholar
+  properties:
+  - type: OpenAPI
+    url: openapi/ulb-scholar-api-openapi.yml
+  - type: Documentation
+    url: >-
+      https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+  - type: JSONSchema
+    url: json-schema/ulb-difusion-publist-schema.json
+  - type: Vocabulary
+    url: vocabulary/ulb-difusion-vocabulary.yml
+  - type: Examples
+    url: examples/index.yml
+  - type: Errors
+    url: errors/ulb-difusion-errors.yml
+  - type: Rules
+    url: rules/ulb-difusion-rules.yml
+  - type: Authentication
+    url: authentication/ulb-authentication.yml
+  - type: Scopes
+    url: scopes/ulb-scopes.yml
+  - type: Lifecycle
+    url: lifecycle/ulb-lifecycle.yml
+  - type: TermsOfService
+    url: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+  - type: Conformance
+    url: conformance/ulb-domain-standards.yml
 common:
   - type: Website
     url: https://www.ulb.be/en
