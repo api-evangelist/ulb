@@ -1,0 +1,55 @@
+name: ULB Authentication Posture
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 of https://difusion-svc.ulb.ac.be/scholar,
+  https://difusion.ulb.ac.be/vufind/OAI/Server, https://auth.ulb.be/,
+  https://auth.ulb.be/idp/metadata and https://cvchercheurs.ulb.be/.
+x-operator: institution
+summary: >-
+  ULB's two publicly reachable machine-readable surfaces require no credential at all. Everything
+  else in the ULB estate sits behind a single institutional login at auth.ulb.be, which is a
+  SAML 2.0 identity provider registered in the Belnet R&E Federation and published to eduGAIN.
+surfaces:
+  - name: DI-fusion Export API
+    base_url: https://difusion-svc.ulb.ac.be
+    scheme: none
+    detail: >-
+      No API key, no token, no session. A bare GET with the two mandatory query parameters returns
+      200 and live bibliographic data. No rate-limit, quota or throttling headers are present on
+      the response; the only headers returned are Server: Apache and Content-Type.
+    verified: '2026-08-30'
+  - name: DI-fusion OAI-PMH
+    base_url: https://difusion.ulb.ac.be/vufind/OAI/Server
+    scheme: none
+    detail: Open harvesting endpoint, no credential. Use is governed by the DI-fusion terms of use rather than by an access control.
+    verified: '2026-08-30'
+  - name: ULB Login
+    base_url: https://auth.ulb.be
+    scheme: institutional_sso
+    detail: >-
+      Central ULB login. `https://auth.ulb.be/` redirects to `/login`; the CAS-style paths
+      (/cas/login, /cas/serviceValidate) and the OIDC discovery document return HTTP 403 with a
+      JSON body `{"status":403,"error":"Forbidden","message":"Access Denied"}`. No public client
+      registration or OIDC discovery is offered.
+    verified: '2026-08-30'
+  - name: ULB Shibboleth Identity Provider
+    base_url: https://auth.ulb.be/idp
+    scheme: saml2
+    entity_id: https://auth.ulb.be/idp
+    detail: >-
+      SAML 2.0 metadata is published unauthenticated at https://auth.ulb.be/idp/metadata (HTTP 200,
+      text/xml, 8,686 bytes). It declares IDPSSODescriptor and AttributeAuthorityDescriptor roles,
+      SingleSignOnService, SingleLogoutService and AttributeService endpoints over HTTP-Redirect,
+      HTTP-POST, HTTP-POST-SimpleSign and SOAP bindings, and a shibmd:Scope of `ulb.be`. It carries
+      the REFEDS Research and Scholarship entity category and the REFEDS SIRTFI assurance
+      certification, registered by http://federation.belnet.be/.
+    verified: '2026-08-30'
+  - name: cvchercheurs.ulb.be
+    base_url: https://cvchercheurs.ulb.be
+    scheme: institutional_sso
+    detail: The researcher CV application, which consumes the DI-fusion export service, is behind ULB Login. Not a public surface.
+    verified: '2026-08-30'
+notes:
+  - No OAuth 2.0 authorization server, no OIDC discovery document and no developer key issuance exist anywhere on ULB's public estate.
+  - 'https://www.ulb.be/.well-known/security.txt returns 404. https://www.ulb.be/llms.txt returns 404.'

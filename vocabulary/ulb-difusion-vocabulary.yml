@@ -1,0 +1,106 @@
+name: DI-fusion Controlled Vocabularies
+aid: ulb:difusion-export
+generated: '2026-08-30'
+method: searched
+source: >-
+  DI-fusion – Download & API, pages 13-15, published by the Bibliothèques de l'ULB at
+  https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+  (HTTP 200, application/pdf, 374,444 bytes, 15 pages, retrieved 2026-08-30). Term values
+  cross-checked against live xml-brief responses from https://difusion-svc.ulb.ac.be/scholar.
+x-operator: institution
+description: >-
+  ULB publishes its own publication-type vocabulary under the `info:ulb-repo/semantics/` URI
+  namespace, distinct from the `info:eu-repo/semantics/` vocabulary of the OpenAIRE guidelines that
+  it also emits in `pubstatus` filters. The namespace is ULB's, minted by ULB, and is one of the
+  few genuinely institution-authored machine-readable assets in this repository.
+vocabularies:
+  - id: publication-types
+    namespace: 'info:ulb-repo/semantics/'
+    description: DI-fusion publication types, used in the `genre` and `genrecvulb` fields of every exported record.
+    terms:
+      - { uri: 'info:ulb-repo/semantics/bookOneAuthor', label: Book with exactly one author }
+      - { uri: 'info:ulb-repo/semantics/bookCollaboration', label: Book with multiple co-authors }
+      - { uri: 'info:ulb-repo/semantics/bookEditor', label: Edition of a book }
+      - { uri: 'info:ulb-repo/semantics/bookPart', label: Chapter or any part of a book }
+      - { uri: 'info:ulb-repo/semantics/bookTranslation', label: Book which is a translation of another book }
+      - { uri: 'info:ulb-repo/semantics/articlePeerReview', label: Peer-reviewed article }
+      - { uri: 'info:ulb-repo/semantics/articleNonPeerReview', label: Non peer-reviewed article }
+      - { uri: 'info:ulb-repo/semantics/bookReview', label: Article which is a review of a book }
+      - { uri: 'info:ulb-repo/semantics/articleLetterToEditor', label: Published letter to the editor of a journal }
+      - { uri: 'info:ulb-repo/semantics/conferenceProceedings', label: The proceedings of a conference }
+      - { uri: 'info:ulb-repo/semantics/conferencePaper', label: Published paper of a conference }
+      - { uri: 'info:ulb-repo/semantics/conferenceContribution', label: Non published contribution to a conference }
+      - { uri: 'info:ulb-repo/semantics/conferencePoster', label: Poster submitted to a conference }
+      - { uri: 'info:ulb-repo/semantics/conferenceAbstract', label: Abstract submitted to a conference }
+      - { uri: 'info:ulb-repo/semantics/masterThesis', label: Student thesis }
+      - { uri: 'info:ulb-repo/semantics/doctoralThesis', label: Doctoral thesis (PhD) }
+      - { uri: 'info:ulb-repo/semantics/postdoctoralThesis', label: Post doctoral thesis }
+      - { uri: 'info:ulb-repo/semantics/workingPaper', label: Working paper }
+      - { uri: 'info:ulb-repo/semantics/report', label: Scientific report }
+      - { uri: 'info:ulb-repo/semantics/reportPart', label: Part of a scientific report }
+      - { uri: 'info:ulb-repo/semantics/bibliography', label: Bibliography }
+      - { uri: 'info:ulb-repo/semantics/patent', label: Patent }
+      - { uri: 'info:ulb-repo/semantics/contributionToPeriodical', label: Contribution to a general purpose (non scientific) journal }
+      - { uri: 'info:ulb-repo/semantics/broadcast', label: Broadcast }
+      - { uri: 'info:ulb-repo/semantics/course', label: Course }
+      - { uri: 'info:ulb-repo/semantics/sound', label: Sound }
+      - { uri: 'info:ulb-repo/semantics/picture', label: Picture }
+      - { uri: 'info:ulb-repo/semantics/video', label: Video }
+      - { uri: 'info:ulb-repo/semantics/database', label: Database }
+      - { uri: 'info:ulb-repo/semantics/software', label: Software }
+      - { uri: 'info:ulb-repo/semantics/website', label: Website }
+      - { uri: 'info:ulb-repo/semantics/other', label: Other }
+  - id: group-by
+    description: Values of the `groupBy` query parameter.
+    terms:
+      - { value: genrecvulb, label: 'Grouped and filtered on ULB CV publication types, then descending year' }
+      - { value: genredifusion, label: 'Grouped on DI-fusion publication types, then descending year' }
+      - { value: genrefnrs1, label: 'F.R.S.-FNRS Guide for Applicants grouping, cases not covered by genrefnrs2/3' }
+      - { value: genrefnrs2, label: 'F.R.S.-FNRS grouping for doctoral and postdoctoral fellowship applicants' }
+      - { value: genrefnrs3, label: 'F.R.S.-FNRS grouping for outputs the applicant judges equivalent to peer-reviewed articles' }
+      - { value: year, label: 'Grouped on descending year of publication' }
+  - id: roles
+    description: Values combined in the `roles` query parameter.
+    terms:
+      - { value: a, label: Scholar is a (co-)author of the publication }
+      - { value: e, label: Scholar is a (co-)editor of the publication }
+      - { value: p, label: Scholar is a (co-)promotor of the thesis or dissertation }
+      - { value: m, label: Scholar is a member of the jury }
+      - { value: d, label: Scholar is the president of the jury }
+  - id: markup
+    description: Values combined in the `markup` query parameter.
+    terms:
+      - { value: a, label: Include the abstract where available }
+      - { value: b, label: 'Bold the subject scholar''s name (scholar operation only)' }
+      - { value: h, label: Include grouping headers, translated per the language parameter }
+      - { value: l, label: Include links to full text where available }
+      - { value: o, label: 'Show the ORCID iD under the title of the publication list (scholar operation only)' }
+      - { value: c, label: Count publications under a heading, at the highest grouping level only }
+      - { value: s, label: Continuous sequence numbering across the whole list }
+      - { value: t, label: 'Sequence numbering reset per top-level grouping (overrides s)' }
+  - id: reftype-filetype
+    description: Permitted reftype/filetype pairs and the default filetype for each reftype.
+    terms:
+      - { reftype: apa, default_filetype: pdf, allowed_filetype: [ pdf, rtf ] }
+      - { reftype: bibtex, default_filetype: bibtex, allowed_filetype: [ bibtex, pdf, rtf ] }
+      - { reftype: ris, default_filetype: ris, allowed_filetype: [ ris, pdf, rtf ] }
+      - { reftype: csv, default_filetype: csv, allowed_filetype: [ csv ] }
+      - { reftype: xml-brief, default_filetype: xml, allowed_filetype: [ xml ] }
+      - { reftype: xml-brief-ext, default_filetype: xml, allowed_filetype: [ xml ], note: 'HTTP 500 on the live service, probed 2026-08-30' }
+      - { reftype: xml-full, default_filetype: xml, allowed_filetype: [ xml ], note: 'HTTP 403 on the live service, probed 2026-08-30' }
+  - id: file-extensions
+    description: File extension emitted for each filetype.
+    terms:
+      - { filetype: pdf, extension: pdf }
+      - { filetype: rtf, extension: rtf }
+      - { filetype: bibtex, extension: bib }
+      - { filetype: csv, extension: xls }
+      - { filetype: ris, extension: txt }
+      - { filetype: xml, extension: xml }
+  - id: identifier-schemes
+    description: Identifier schemes DI-fusion mints or resolves.
+    terms:
+      - { scheme: DAI, pattern: 'http://difusion.ulb.ac.be/dai/{matricule}', label: 'Digital Author Identifier, minted by ULB for each scholar' }
+      - { scheme: matricule, label: 'ULB internal person identifier, accepted directly as scholarID' }
+      - { scheme: Handle, pattern: 'http://hdl.handle.net/2013/ULB-DIPOT:oai:dipot.ulb.ac.be:{id}', label: 'Handle System persistent identifier for the DI-fusion detail page' }
+      - { scheme: OAI, pattern: 'ULB-DIPOT:oai:dipot.ulb.ac.be:{id}', label: 'OAI identifier used by the DI-fusion OAI-PMH endpoint and VuFind record URLs' }

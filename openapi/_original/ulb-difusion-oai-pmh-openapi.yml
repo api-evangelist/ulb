@@ -1,0 +1,170 @@
+openapi: 3.1.0
+x-generated: '2026-08-30'
+x-method: derived
+x-source: >-
+  Derived from the OAI-PMH 2.0 specification (http://www.openarchives.org/OAI/openarchivesprotocol.html)
+  and from live probes of https://difusion.ulb.ac.be/vufind/OAI/Server on 2026-08-30 covering the verbs
+  Identify, ListMetadataFormats, ListSets, ListIdentifiers, ListRecords and GetRecord. ULB publishes no
+  OpenAPI of its own; this description is API Evangelist's, not the institution's.
+x-operator: institution
+info:
+  title: DI-fusion OAI-PMH Harvesting Endpoint
+  version: '2.0'
+  summary: OAI-PMH 2.0 metadata harvesting endpoint for DI-fusion, the Université libre de Bruxelles institutional research repository.
+  description: |
+    ULB's DI-fusion repository publishes an OAI-PMH 2.0 endpoint for third-party metadata
+    harvesting. It is INSTITUTION-OPERATED: it answers on ULB's own registrable domain
+    (`difusion.ulb.ac.be`), its `Identify` response carries `adminEmail: di-fusion@ulb.be` and
+    `baseURL: https://difusion.ulb.ac.be/vufind/OAI/Server`, and the terms of use published by the
+    ULB Libraries permit harvesting for non-profit purposes provided the OAI identifier or source
+    link is indicated. The repository software underneath is VuFind (open source, self-hosted by
+    ULB); the deployment, the host and the data are ULB's.
+
+    THIS ENDPOINT IS PRESENT AND PROTOCOL-CONFORMANT ON ITS DISCOVERY VERBS BUT NOT HARVESTABLE.
+    Probed 2026-08-30:
+      * `verb=Identify` returns a valid OAI-PMH `Identify` document (protocolVersion 2.0,
+        earliestDatestamp 2008-10-01T00:00:00Z, granularity YYYY-MM-DDThh:mm:ssZ, deletedRecord
+        no) -- but with HTTP status 500, and with the string `Unknown Action` plus a full HTML
+        page appended after `</OAI-PMH>`.
+      * `verb=ListMetadataFormats` advertises exactly one format, `oai_dc`, with the same HTTP 500
+        and the same ~48KB of appended HTML.
+      * `verb=ListRecords`, `verb=ListIdentifiers` and `verb=GetRecord` return HTTP 200 with
+        `<error code="badArgument">Missing Metadata Prefix</error>` even when `metadataPrefix=oai_dc`
+        is supplied, in any parameter order, with or without `from`. No records could be harvested.
+      * `verb=ListSets` returns the same `badArgument` error rather than a set list or
+        `noSetHierarchy`.
+      * Every response echoes `<request>http://digital.library.villanova.edu/OAIServer.php</request>`
+        -- the unmodified VuFind demo default -- and `<repositoryName/>` and
+        `<repositoryIdentifier/>` are empty.
+    DI-fusion is registered as an OAI-PMH compliant repository in OpenDOAR, ROAR and Sherpa. A
+    harvester that trusts that registration and this endpoint's presence will collect nothing.
+    Recorded here as measured, not as advertised.
+  contact:
+    name: DI-fusion, Bibliothèques de l'ULB
+    email: di-fusion@ulb.be
+    url: https://bib.ulb.be/en/find-documents/di-fusion
+  termsOfService: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+externalDocs:
+  description: The Open Archives Initiative Protocol for Metadata Harvesting, version 2.0
+  url: http://www.openarchives.org/OAI/openarchivesprotocol.html
+servers:
+  - url: https://difusion.ulb.ac.be/vufind
+    description: DI-fusion OAI-PMH provider, operated by the Université libre de Bruxelles
+tags:
+  - name: OAI-PMH
+    description: The six OAI-PMH 2.0 protocol verbs.
+paths:
+  /OAI/Server:
+    get:
+      tags: [ OAI-PMH ]
+      operationId: oaiPmhRequest
+      summary: Issue an OAI-PMH 2.0 request
+      description: |
+        Single OAI-PMH entry point. The verb is selected with the `verb` query parameter; the
+        remaining parameters are conditional on it, per the OAI-PMH 2.0 specification.
+      parameters:
+        - name: verb
+          in: query
+          required: true
+          description: |
+            The OAI-PMH verb. `Identify` and `ListMetadataFormats` are answered (with HTTP 500 and
+            trailing HTML); the four remaining verbs reject a valid `metadataPrefix`.
+          schema:
+            type: string
+            enum: [ Identify, ListMetadataFormats, ListSets, ListIdentifiers, ListRecords, GetRecord ]
+        - name: metadataPrefix
+          in: query
+          required: false
+          description: |
+            Metadata format to return. The endpoint advertises `oai_dc` and only `oai_dc`, but
+            rejects it with `badArgument: Missing Metadata Prefix` on every record-bearing verb.
+          schema:
+            type: string
+            enum: [ oai_dc ]
+        - name: identifier
+          in: query
+          required: false
+          description: 'OAI identifier of a single record, e.g. ULB-DIPOT:oai:dipot.ulb.ac.be:2013/151029. Required for GetRecord.'
+          schema: { type: string }
+        - name: from
+          in: query
+          required: false
+          description: Lower bound of the selective-harvesting datestamp range, granularity YYYY-MM-DDThh:mm:ssZ.
+          schema: { type: string }
+        - name: until
+          in: query
+          required: false
+          description: Upper bound of the selective-harvesting datestamp range.
+          schema: { type: string }
+        - name: set
+          in: query
+          required: false
+          description: Set to restrict the harvest to. No set hierarchy could be retrieved.
+          schema: { type: string }
+        - name: resumptionToken
+          in: query
+          required: false
+          description: Flow-control token returned by an incomplete list response.
+          schema: { type: string }
+      responses:
+        '200':
+          description: |
+            OAI-PMH XML response. In practice, for ListRecords, ListIdentifiers, GetRecord and
+            ListSets, this is an `<error code="badArgument">` document rather than a payload.
+          content:
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/OaiPmhResponse'
+        '500':
+          description: |
+            Returned for `Identify` and `ListMetadataFormats`. The body is a well-formed OAI-PMH
+            document followed by the literal text `Unknown Action` and a full HTML page. Clients
+            that check the status code will discard a valid response; clients that parse to
+            `</OAI-PMH>` will succeed.
+          content:
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/OaiPmhResponse'
+components:
+  schemas:
+    OaiPmhResponse:
+      type: object
+      title: OAI-PMH
+      description: Root of an OAI-PMH 2.0 response, namespace http://www.openarchives.org/OAI/2.0/.
+      properties:
+        responseDate: { type: string, format: date-time }
+        request:
+          type: string
+          description: 'Echo of the request base URL. On this deployment it is the stale VuFind default, http://digital.library.villanova.edu/OAIServer.php, not ULB''s own base URL.'
+        error:
+          $ref: '#/components/schemas/OaiError'
+        Identify:
+          $ref: '#/components/schemas/Identify'
+        ListMetadataFormats:
+          type: object
+          properties:
+            metadataFormat:
+              type: array
+              items:
+                type: object
+                properties:
+                  metadataPrefix: { type: string, example: oai_dc }
+                  schema: { type: string, format: uri }
+                  metadataNamespace: { type: string, format: uri }
+    Identify:
+      type: object
+      properties:
+        repositoryName: { type: string, description: Empty on this deployment. }
+        baseURL: { type: string, format: uri, example: 'https://difusion.ulb.ac.be/vufind/OAI/Server' }
+        protocolVersion: { type: string, example: '2.0' }
+        adminEmail: { type: string, format: email, example: di-fusion@ulb.be }
+        earliestDatestamp: { type: string, example: '2008-10-01T00:00:00Z' }
+        deletedRecord: { type: string, enum: [ 'no', persistent, transient ] }
+        granularity: { type: string, example: 'YYYY-MM-DDThh:mm:ssZ' }
+    OaiError:
+      type: object
+      properties:
+        code:
+          type: string
+          enum: [ badArgument, badResumptionToken, badVerb, cannotDisseminateFormat, idDoesNotExist, noRecordsMatch, noMetadataFormats, noSetHierarchy ]
+        message: { type: string, example: 'Missing Metadata Prefix' }

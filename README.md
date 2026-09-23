@@ -64,54 +64,93 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Université libre de Bruxelles (ULB) is a major French-speaking research university in Brussels, Belgium, ranked #230 in the QS World University Rankings 2025. Its publicly documented developer footprint centers on DI-fusion, the university's institutional research repository, which exposes a documented HTTP export API, a search interface, RSS feeds, and an OAI-PMH harvesting service. ULB also maintains an official GitHub organization for departmental and research code.
+Université libre de Bruxelles (ULB) is a French-speaking research university in Brussels, Belgium, founded in 1834 and funded through the Fédération Wallonie-Bruxelles. Unusually for a university, ULB operates its research infrastructure itself rather than renting it: there is no Figshare, Elsevier Pure, Dataverse or Ex Libris Esploro tenant under ULB's name, and the one documented API it publishes is its own engineering. Every surface profiled here is `x-operator: institution`; none is a vendor's contract running under the university's name.
 
 - APIs.json: https://raw.githubusercontent.com/api-evangelist/ulb/refs/heads/main/apis.yml
 - Run with Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=ulb-api-evangelist&utm_content=repo
 
 ## Type
 
+- university — Public Research University
 - Index
-- Consumer
-- 3rd-Party
+- Provider
+- Public
 
 ## Tags
 
-Education, Higher Education, University, Research, Open Access, Institutional Repository, Belgium
+University, Higher Education, Education, Belgium, Europe, Research, Research Data, Institutional Repository, Open Access, Identity Federation, OAI-PMH, Library
 
 ## APIs
 
-- **DI-fusion Scholar Export API** — exports a given scholar's publication list (APA, BibTeX, RIS, CSV, xml-brief/-ext/-full) from `difusion-svc.ulb.ac.be/scholar`. Docs: https://bib.ulb.be/en/find-documents/di-fusion
-- **DI-fusion Group Export API** — exports publication lists for a group of scholars from `difusion-svc.ulb.ac.be/group`. Docs: https://bib.ulb.be/en/find-documents/di-fusion
-- **DI-fusion OAI-PMH Harvesting Service** — documented OAI-PMH metadata harvesting for the institutional repository. Docs: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+All four surfaces are operated by ULB itself, on ULB's own registrable domains (`ulb.be`, `ulb.ac.be`).
 
-## Plans
+- **DI-fusion Export API** — `https://difusion-svc.ulb.ac.be` — bespoke ULB service exporting a scholar's or group's publication list in APA, BibTeX, RIS, CSV and three ULB XML formats. No credential required. Documented by the ULB Libraries in a 15-page PDF. Verified live 2026-08-30. [OpenAPI](openapi/ulb-difusion-export-openapi.yml)
+- **DI-fusion OAI-PMH Harvesting Endpoint** — `https://difusion.ulb.ac.be/vufind/OAI/Server` — answers `Identify` and `ListMetadataFormats` with valid OAI-PMH 2.0 documents, but rejects the `oai_dc` prefix it advertises on every record-bearing verb. Present, registered, and not harvestable. [OpenAPI](openapi/ulb-difusion-oai-pmh-openapi.yml)
+- **DI-fusion OpenSearch Description** — `https://difusion.ulb.ac.be/vufind/Search/OpenSearch` — OpenSearch 1.1 description for the self-hosted VuFind discovery layer. HTTP 200.
+- **ULB Shibboleth Identity Provider (SAML 2.0 metadata)** — `https://auth.ulb.be/idp/metadata` — complete, unauthenticated SAML 2.0 metadata for entityID `https://auth.ulb.be/idp`, registered in the Belnet R&E Federation and published to eduGAIN. Carries the REFEDS Research & Scholarship entity category and SIRTFI assurance certification. The most complete contract ULB publishes.
 
-- [plans/ulb-plans-pricing.yml](plans/ulb-plans-pricing.yml)
+## What was measured, and what is broken
 
-## Rate Limits
+Probed 2026-08-30. Every row is a status code, not a link.
 
-- [rate-limits/ulb-rate-limits.yml](rate-limits/ulb-rate-limits.yml)
+| Surface | Result |
+|---|---|
+| `GET /scholar` (xml-brief, apa/pdf, bibtex, ris, csv) | 200, live bibliographic data |
+| `reftype=xml-full` | **403** — the richest documented format, five pages of ULB's own PDF, is not publicly reachable |
+| `reftype=xml-brief-ext` | **500** — the format added by the 03/2023 documentation revision |
+| missing mandatory param, unknown `scholarID` | **500** Tomcat page, never a 4xx |
+| OAI-PMH `verb=Identify` | valid protocol document under **HTTP 500**, with `Unknown Action` and a full HTML page appended after `</OAI-PMH>` |
+| OAI-PMH `ListRecords&metadataPrefix=oai_dc` | 200 `badArgument: Missing Metadata Prefix` — **nothing is harvestable** |
+| OAI-PMH `<request>` echo | `http://digital.library.villanova.edu/OAIServer.php` — the unmodified VuFind demo default |
+| unAPI server (advertised in the DI-fusion HTML head) | port 8080 does not answer |
+| `dipot.ulb.ac.be` (DSpace, serves the full-text links) | **500** "DSpace at ULB: Internal system error" |
+| `gehol.ulb.be` (timetable), `cible.ulb.be` (discovery) | resolve in DNS, TCP times out — not assessable |
+| `llms.txt`, `.well-known/security.txt` | 404 |
 
-## FinOps
+DI-fusion is registered as an OAI-PMH compliant repository in OpenDOAR, ROAR and Sherpa. A harvester that trusts that registration will collect nothing.
 
-- [finops/ulb-finops.yml](finops/ulb-finops.yml)
+## Domain standards (Kin Score `education` regime)
+
+Met: `saml`, `shibboleth`. Partial: `oai-pmh` (present, not harvestable). Documented but unverifiable: `orcid`. Absent, with no public evidence: `scim`, `lti`, `oneroster`, `ed-fi`, `caliper`, `qti`, `datacite`, `crossref`. Full evidence in [conformance/ulb-domain-standards.yml](conformance/ulb-domain-standards.yml).
+
+## Artifacts
+
+- [openapi/](openapi/) — two OpenAPI 3.1 descriptions (`derived`; ULB publishes none of its own), with pristine copies in [openapi/_original/](openapi/_original/)
+- [json-schema/](json-schema/) — the xml-brief publication-list shape
+- [examples/](examples/) — seven verbatim captured responses, each with request, status and byte count in [examples/index.yml](examples/index.yml)
+- [vocabulary/](vocabulary/) — ULB's own `info:ulb-repo/semantics/` publication-type namespace plus the groupBy, roles, markup and reftype/filetype vocabularies
+- [errors/](errors/) — eleven measured failure modes
+- [rules/](rules/) — fifteen consumption rules, including the GDPR rule against enumerating matricules
+- [authentication/](authentication/), [scopes/](scopes/), [conformance/](conformance/), [lifecycle/](lifecycle/)
+- [plans/](plans/ulb-plans-pricing.yml), [rate-limits/](rate-limits/ulb-rate-limits.yml), [finops/](finops/ulb-finops.yml), [security/](security/ulb-domain-security.yml)
 
 ## Timestamps
 
 - Created: 2026-06-03
-- Modified: 2026-06-03
+- Modified: 2026-08-30
 
 ## Common Properties
 
 - Website: https://www.ulb.be/en
-- GitHub: https://github.com/ulb
+- Portal (DI-fusion): https://difusion.ulb.ac.be/
+- Research Repository: https://bib.ulb.be/en/find-documents/di-fusion
+- Documentation (DI-fusion – Download & API, PDF): https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+- Identity Federation: https://auth.ulb.be/idp/metadata
+- Library Catalog: https://bib.ulb.be/en
+- Course Catalog: https://www.ulb.be/fr/se-former/catalogue-des-formations
+- AI Policy: https://www.ulb.be/fr/intelligence-artificielle/note-dintention-relative-aux-outils-dia-dans-lenseignement-a-lulb
+- AI Tooling (AcademIA): https://www.ulb.be/fr/intelligence-artificielle/academ-ia
+- GitHub Organization: https://github.com/ulb
+- Terms of Service: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+- Privacy Policy: https://www.ulb.be/fr/mentions-legales/politique-de-protection-des-donnees-a-lulb
+- Support: https://www.ulb.be/en/contact-us
+- Blog: https://www.ulb.be/fr/actus-et-agenda
 - LinkedIn: https://be.linkedin.com/school/universite-libre-de-bruxelles/
-- Source Code: https://github.com/ulb
+- ROR: https://ror.org/01r9htc13
 
 ## Notes
 
-The DI-fusion Scholar export API was verified live (HTTP 200, valid XML). The DI-fusion Download & API technical PDF documents the Scholar, Group, search, RSS, sitemap and OAI-PMH services. The VuFind OAI-PMH paths probed returned HTTP 500, so the OAI service is cataloged from documentation rather than a verified live response. No public student/SIS, timetable, library discovery, or SSO API documentation was found. No endpoints were fabricated.
+Re-profiled 2026-08-30 under the API Evangelist university pipeline, which settles operator attribution before saving anything. The previous profile held three `apis[]` entries with no `x-operator`, one of which carried no base URL at all and was invisible to the cohort audit. Nothing vendor-attributed was found to remove — ULB is one of the few institutions in this cohort with no vendor tenant. The scholar and group exports were consolidated into the single contract they belong to, and the OAI-PMH, OpenSearch and SAML surfaces were located, probed and given real base URLs. No public student/SIS, timetable, library discovery or open-data API was found; the timetable and discovery hosts exist but do not answer from the public internet. No endpoints were fabricated.
 
 ## Maintainers
 

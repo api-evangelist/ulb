@@ -1,0 +1,106 @@
+name: DI-fusion Error Behaviour
+aid: ulb:difusion-export
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live HTTP probes of https://difusion-svc.ulb.ac.be and
+  https://difusion.ulb.ac.be/vufind/OAI/Server on 2026-08-30, using a desktop browser
+  User-Agent. ULB publishes no error reference; every row below is measured, not documented.
+x-operator: institution
+description: >-
+  ULB's DI-fusion services return no machine-readable error object. Client error is reported as an
+  HTTP 500 Tomcat error page, and one documented output format is blocked at the web-server layer
+  with an Apache 403. The OAI-PMH endpoint returns a well-formed protocol document under an HTTP
+  500 status with trailing HTML. Any consumer must branch on status code plus body sniffing.
+errors:
+  - service: DI-fusion Export API
+    request: 'GET https://difusion-svc.ulb.ac.be/scholar?scholarInst=ULB'
+    condition: Mandatory parameter `scholarID` omitted.
+    status: 500
+    content_type: text/html;charset=utf-8
+    body: 'HTTP Status 500 – Internal Server Error (Apache Tomcat error page, 1,080 bytes)'
+    expected: 400 Bad Request with a named missing-parameter error.
+    verified: '2026-08-30'
+  - service: DI-fusion Export API
+    request: 'GET https://difusion-svc.ulb.ac.be/scholar?scholarID=NOTREAL&scholarInst=ULB'
+    condition: Unknown or malformed scholar identifier.
+    status: 500
+    content_type: text/html;charset=utf-8
+    body: 'HTTP Status 500 – Internal Server Error (Apache Tomcat error page, 831 bytes)'
+    expected: 404 Not Found, or 200 with an empty publication list.
+    verified: '2026-08-30'
+  - service: DI-fusion Export API
+    request: 'GET https://difusion-svc.ulb.ac.be/scholar?scholarID=19262&scholarInst=ULB&reftype=xml-full&filetype=xml'
+    condition: '`reftype=xml-full` — the richest format, documented across pages 8-12 of ULB''s own PDF with a full MPEG-21 DIDL/MODS example.'
+    status: 403
+    content_type: text/html; charset=iso-8859-1
+    body: "403 Forbidden — \"You don't have permission to access this resource.\" (Apache front end, 199 bytes)"
+    expected: 200 with the documented DIDL/MODS payload, or documentation stating the format is internal-only.
+    verified: '2026-08-30'
+  - service: DI-fusion Export API
+    request: 'GET https://difusion-svc.ulb.ac.be/scholar?scholarID=19262&scholarInst=ULB&reftype=xml-brief-ext&filetype=xml'
+    condition: '`reftype=xml-brief-ext` — the format added by the 03/2023 revision of the documentation.'
+    status: 500
+    content_type: text/html;charset=utf-8
+    body: 'HTTP Status 500 – Internal Server Error (Apache Tomcat error page, 831 bytes)'
+    expected: 200 with the extended brief record.
+    verified: '2026-08-30'
+  - service: DI-fusion Export API
+    request: 'GET https://difusion-svc.ulb.ac.be/group'
+    condition: No `groupID` and no `scholarIDs`. ULB publishes no directory of valid group identifiers, so the operation could not be exercised successfully.
+    status: 500
+    content_type: text/html;charset=utf-8
+    body: 'HTTP Status 500 – Internal Server Error'
+    expected: 400 Bad Request naming the mutually exclusive mandatory parameters.
+    verified: '2026-08-30'
+  - service: DI-fusion OAI-PMH
+    request: 'GET https://difusion.ulb.ac.be/vufind/OAI/Server?verb=Identify'
+    condition: A valid, well-formed OAI-PMH Identify request.
+    status: 500
+    content_type: text/xml
+    body: 'A valid OAI-PMH Identify document, then the literal string `Unknown Action`, then a full HTML page. Total 50,003 bytes for a 1,336-byte protocol response.'
+    expected: 200 with the Identify document alone.
+    verified: '2026-08-30'
+  - service: DI-fusion OAI-PMH
+    request: 'GET https://difusion.ulb.ac.be/vufind/OAI/Server?verb=ListMetadataFormats'
+    condition: A valid ListMetadataFormats request.
+    status: 500
+    content_type: text/xml
+    body: 'A valid ListMetadataFormats document advertising `oai_dc`, followed by ~48,600 bytes of appended HTML.'
+    expected: 200 with the format list alone.
+    verified: '2026-08-30'
+  - service: DI-fusion OAI-PMH
+    request: 'GET https://difusion.ulb.ac.be/vufind/OAI/Server?verb=ListRecords&metadataPrefix=oai_dc'
+    condition: 'The metadataPrefix the endpoint itself advertises, supplied correctly. Reproduced with ListIdentifiers, GetRecord, with `from`, and with the parameters in reversed order.'
+    status: 200
+    content_type: text/xml
+    body: '<error code="badArgument">Missing Metadata Prefix</error>'
+    expected: 200 with harvestable oai_dc records.
+    impact: >-
+      No metadata can be harvested from this endpoint by any conformant OAI-PMH client, despite
+      DI-fusion being registered as OAI-PMH compliant in OpenDOAR, ROAR and Sherpa.
+    verified: '2026-08-30'
+  - service: DI-fusion OAI-PMH
+    request: 'GET https://difusion.ulb.ac.be/vufind/OAI/Server?verb=ListSets'
+    condition: A verb that takes no metadataPrefix.
+    status: 200
+    content_type: text/xml
+    body: '<error code="badArgument">Missing Metadata Prefix</error>'
+    expected: 'A set list, or `<error code="noSetHierarchy">`.'
+    verified: '2026-08-30'
+  - service: DI-fusion unAPI
+    request: 'GET http://difusion-svc.ulb.ac.be:8080/funapi/dspace-pmh'
+    condition: 'The unAPI server advertised by `<link rel="unapi-server">` in the DI-fusion HTML head.'
+    status: 0
+    body: 'Connection to port 8080 does not complete from the public internet.'
+    expected: An unAPI format list.
+    verified: '2026-08-30'
+  - service: DSpace at ULB (dipot)
+    request: 'GET https://dipot.ulb.ac.be/'
+    condition: 'The DSpace instance that stores DI-fusion full text and mints the OAI identifiers used across the platform.'
+    status: 500
+    content_type: text/html
+    body: '<title>DSpace at ULB: Internal system error</title>'
+    expected: The DSpace home page.
+    impact: 'Full-text links of the form https://dipot.ulb.ac.be/dspace/bitstream/... are returned by the export API but the host serving them is erroring.'
+    verified: '2026-08-30'

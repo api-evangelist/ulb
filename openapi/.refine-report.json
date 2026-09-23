@@ -1,0 +1,29 @@
+{
+  "provider": "ulb",
+  "sources": [
+    "_original/ulb-difusion-export-openapi.yml",
+    "_original/ulb-difusion-oai-pmh-openapi.yml"
+  ],
+  "outputs": [
+    "ulb-group-api-openapi.yml",
+    "ulb-scholar-api-openapi.yml",
+    "ulb-oai-pmh-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "2 archived document(s) dropped as subsets of other archived documents",
+    "sourced from openapi/_original/ (2 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "ulb-difusion-export-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "ulb-difusion-oai-pmh-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "_original/ulb-difusion-oai-pmh-openapi_2.yml: archived document superseded by a larger archived document",
+    "_original/ulb-difusion-export-openapi_2.yml: archived document superseded by a larger archived document",
+    "ulb-group-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ulb-oai-pmh-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "ulb-scholar-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

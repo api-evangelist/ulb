@@ -1,0 +1,90 @@
+name: ULB Domain Standard Conformance
+regime: education
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 of https://difusion.ulb.ac.be/vufind/OAI/Server,
+  https://auth.ulb.be/idp/metadata, https://difusion.ulb.ac.be/vufind/Search/OpenSearch,
+  https://difusion-svc.ulb.ac.be/scholar, and the eduGAIN entity registry at
+  https://technical.edugain.org/api.php?action=list_entities (HTTP 200). Documented-only rows cite
+  the exact page of ULB's own published API documentation.
+x-operator: institution
+summary: >-
+  Two of the twelve education-regime standards are met by a live ULB-operated surface, one with a
+  material defect. A third is documented by ULB but could not be exercised. The remaining nine have
+  no public evidence and are recorded as absent rather than assumed.
+standards:
+  - id: oai-pmh
+    status: partial
+    evidence_url: https://difusion.ulb.ac.be/vufind/OAI/Server?verb=Identify
+    evidence: >-
+      Returns a well-formed OAI-PMH 2.0 Identify document — protocolVersion 2.0, baseURL
+      https://difusion.ulb.ac.be/vufind/OAI/Server, adminEmail di-fusion@ulb.be, earliestDatestamp
+      2008-10-01T00:00:00Z, granularity YYYY-MM-DDThh:mm:ssZ, deletedRecord no. ListMetadataFormats
+      advertises oai_dc. Captured verbatim in examples/ulb-difusion-oai-identify.xml and
+      examples/ulb-difusion-oai-listmetadataformats.xml.
+    defect: >-
+      Discovery verbs return HTTP 500 with an HTML page appended after </OAI-PMH>, and every
+      record-bearing verb (ListRecords, ListIdentifiers, GetRecord) rejects the advertised
+      metadataPrefix=oai_dc with `badArgument: Missing Metadata Prefix`. Nothing is harvestable.
+      Responses also echo the unmodified VuFind demo base URL
+      http://digital.library.villanova.edu/OAIServer.php and leave repositoryName empty.
+    operator: institution
+    verified: '2026-08-30'
+  - id: saml
+    status: met
+    evidence_url: https://auth.ulb.be/idp/metadata
+    evidence: >-
+      HTTP 200, text/xml, 8,686 bytes. A complete SAML 2.0 EntityDescriptor for entityID
+      https://auth.ulb.be/idp, with IDPSSODescriptor and AttributeAuthorityDescriptor roles,
+      SingleSignOnService, SingleLogoutService and AttributeService endpoints, and HTTP-Redirect,
+      HTTP-POST, HTTP-POST-SimpleSign and SOAP bindings. Captured in
+      examples/ulb-shibboleth-idp-metadata.xml. Corroborated by the eduGAIN registry, which lists
+      this entityID with registration authority http://federation.belnet.be/, federation code
+      BELNET, display name "Universite Libre de Bruxelles (ULB)", scope ulb.be, sirtfi_status 1,
+      first seen 2021-06-08.
+    operator: institution
+    verified: '2026-08-30'
+  - id: shibboleth
+    status: met
+    evidence_url: https://auth.ulb.be/idp/metadata
+    evidence: >-
+      The same metadata document declares the Shibboleth metadata namespace
+      urn:mace:shibboleth:metadata:1.0 and carries `<shibmd:Scope>ulb.be</shibmd:Scope>` on both
+      the IDPSSODescriptor and the AttributeAuthorityDescriptor, and the entity is served under the
+      canonical Shibboleth IdP path /idp/. It additionally asserts the REFEDS Research and
+      Scholarship entity category (http://refeds.org/category/research-and-scholarship) and the
+      REFEDS SIRTFI assurance certification (https://refeds.org/sirtfi) via mdattr:EntityAttributes.
+    operator: institution
+    verified: '2026-08-30'
+  - id: orcid
+    status: documented
+    evidence_url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+    evidence: >-
+      Page 14, markup specifications table: "o — The ORCID Id is shown under the title of the
+      publication list. Only available on the 'scholar' API." The option is applied only to the
+      apa/rtf, bibtex, ris and pdf renderings, not to xml-brief, so it could not be confirmed in a
+      parseable probe response; a live request with markup containing `o` returns 200 but the
+      xml-brief payload carries no ORCID element. Recorded as documented, not as met.
+    operator: institution
+    verified: '2026-08-30'
+  - { id: scim, status: absent, evidence: 'No SCIM endpoint or provisioning documentation found on any ULB host.' }
+  - { id: lti, status: absent, evidence: 'ULB runs Université Virtuelle for teaching, which is not publicly reachable; no LTI tool or platform registration is published.' }
+  - { id: oneroster, status: absent, evidence: 'No OneRoster surface found.' }
+  - { id: ed-fi, status: absent, evidence: 'Ed-Fi is a US K-12 and state-agency standard with no adoption path for a Belgian university.' }
+  - { id: caliper, status: absent, evidence: 'No Caliper Analytics endpoint or sensor documentation found.' }
+  - { id: qti, status: absent, evidence: 'No QTI item bank or assessment interchange surface found.' }
+  - { id: datacite, status: absent, evidence: 'DI-fusion mints Handle System identifiers (hdl.handle.net/2013/ULB-DIPOT:...), not DataCite DOIs. No DataCite prefix or MDS surface is exposed by ULB.' }
+  - { id: crossref, status: absent, evidence: 'No ULB-operated Crossref deposit or query surface found.' }
+adjacent_standards:
+  - { id: opensearch-1.1, status: met, evidence_url: 'https://difusion.ulb.ac.be/vufind/Search/OpenSearch?method=describe', evidence: 'HTTP 200, text/xml, 785 bytes. A valid OpenSearchDescription in namespace http://a9.com/-/spec/opensearch/1.1/, advertised from the DI-fusion HTML head as rel="search". ShortName is empty. Captured in examples/ulb-difusion-opensearch-description.xml.', operator: institution, verified: '2026-08-30' }
+  - { id: dublin-core, status: partial, evidence: 'oai_dc is the only metadata format the OAI-PMH endpoint advertises, but no oai_dc record can be retrieved.', operator: institution, verified: '2026-08-30' }
+  - { id: unapi, status: dead, evidence_url: 'http://difusion-svc.ulb.ac.be:8080/funapi/dspace-pmh', evidence: 'Advertised as rel="unapi-server" in the DI-fusion HTML head, but port 8080 does not answer from the public internet.', operator: institution, verified: '2026-08-30' }
+  - { id: handle-system, status: met, evidence: 'Every exported record carries a `startpage` of the form http://hdl.handle.net/2013/ULB-DIPOT:oai:dipot.ulb.ac.be:{id}. Observed live in examples/ulb-difusion-scholar-xml-brief.xml.', operator: institution, verified: '2026-08-30' }
+  - { id: bibtex, status: met, evidence: 'reftype=bibtex returns text/x-bibtex, 8,421 bytes. Captured in examples/ulb-difusion-scholar-bibtex.bib.', operator: institution, verified: '2026-08-30' }
+  - { id: ris, status: met, evidence: 'reftype=ris returns text/plain RIS, 9,649 bytes, HTTP 200.', operator: institution, verified: '2026-08-30' }
+  - { id: mpeg21-didl-mods, status: blocked, evidence: 'ULB documents an MPEG-21 DIDL container carrying MODS 3.2 descriptive metadata for reftype=xml-full across pages 8-12 of its own PDF, but the live service returns HTTP 403 for that reftype.', operator: institution, verified: '2026-08-30' }
+  - { id: openaire-guidelines, status: partial, evidence: 'The documented example query filters on `info:eu-repo/semantics/` publication-status values (published, nonPublished, inPress, submittedForPublication), the OpenAIRE/DRIVER vocabulary. ULB additionally mints its own `info:ulb-repo/semantics/` publication-type namespace, recorded in vocabulary/ulb-difusion-vocabulary.yml.', operator: institution, verified: '2026-08-30' }
+  - { id: refeds-sirtfi, status: met, evidence: 'urn:oasis:names:tc:SAML:attribute:assurance-certification = https://refeds.org/sirtfi in the IdP metadata; corroborated by eduGAIN sirtfi_status 1.', operator: institution, verified: '2026-08-30' }
+  - { id: refeds-r-and-s, status: met, evidence: 'http://macedir.org/entity-category-support = http://refeds.org/category/research-and-scholarship in the IdP metadata.', operator: institution, verified: '2026-08-30' }
+  - { id: geant-code-of-conduct, status: absent, evidence: 'The eduGAIN registry returns coco_status null and coco_id null for https://auth.ulb.be/idp; no CoCo entity attribute is present in the metadata.', operator: institution, verified: '2026-08-30' }

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oai_dc="http://www.openarchives.org/OAI/2.0/oai_dc/" xmlns:mets="http://www.loc.gov/METS/" xmlns:php="http://php.net/xsl" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/              http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2026-08-30T22:45:24Z</responseDate>
+  <request verb="Identify">https://difusion.ulb.ac.be/vufind/OAI/Server</request>
+  <Identify>
+    <repositoryName/>
+    <baseURL>https://difusion.ulb.ac.be/vufind/OAI/Server</baseURL>
+    <protocolVersion>2.0</protocolVersion>
+    <adminEmail>di-fusion@ulb.be</adminEmail>
+    <earliestDatestamp>2008-10-01T00:00:00Z</earliestDatestamp>
+    <deletedRecord>no</deletedRecord>
+    <granularity>YYYY-MM-DDThh:mm:ssZ</granularity>
+    <description>
+      <oai-identifier xmlns="http://www.openarchives.org/OAI/2.0/oai-identifier" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/oai-identifier                                               http://www.openarchives.org/OAI/2.0/oai-identifier.xsd">
+        <scheme>oai</scheme>
+        <repositoryIdentifier/>
+        <delimiter>:</delimiter>
+      </oai-identifier>
+    </description>
+  </Identify>
+</OAI-PMH>

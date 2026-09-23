@@ -1,0 +1,340 @@
+openapi: 3.1.0
+x-generated: '2026-08-30'
+x-method: derived
+x-source: >-
+  Derived from DI-fusion – Download & API (Bibliothèques de l'ULB, rev. 03/2023, 15pp, HTTP 200,
+  application/pdf, 374,444 bytes, retrieved 2026-08-30 from
+  https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE)
+  and from live probes of https://difusion-svc.ulb.ac.be on 2026-08-30. ULB publishes no OpenAPI of
+  its own; this description is API Evangelist's, not the institution's.
+x-operator: institution
+info:
+  title: DI-fusion Export API
+  version: '2023.03'
+  summary: Publication-list export service for DI-fusion, the institutional research repository of the Université libre de Bruxelles.
+  description: |
+    DI-fusion is the institutional research repository of the Université libre de Bruxelles (ULB).
+    Alongside its search interface it exposes a bespoke, ULB-engineered HTTP export service that
+    renders the publication list of a single scholar or of a group of scholars in a choice of
+    bibliographic reference formats (APA, BibTeX, RIS, CSV and three ULB XML flavours) and file
+    types (PDF, RTF, BibTeX, CSV, RIS, XML).
+
+    This is an INSTITUTION-OPERATED contract. The service runs on ULB's own registrable domain
+    (`ulb.ac.be`), its responses are branded from `/data/difusion-services/conf/` on ULB's own
+    servers, and the specification below is derived from ULB's own published documentation --
+    "DI-fusion – Download & API", 15pp, originally 04/2014 and last revised 03/2023, published by
+    the ULB Libraries at bib.ulb.be. It is not a vendor product running under ULB's name.
+
+    PROBED BEHAVIOUR (2026-08-30). Every operation and parameter below was exercised against the
+    live host. Findings that differ from the published documentation are recorded on the
+    operations and in `errors/ulb-difusion-errors.yml`:
+      * `reftype=xml-full` returns HTTP 403 from the Apache layer -- the richest documented format
+        is not publicly reachable.
+      * `reftype=xml-brief-ext`, added in the 03/2023 revision, returns HTTP 500 (Tomcat).
+      * Omitting a mandatory parameter, or supplying an unknown `scholarID`, returns HTTP 500 with
+        a Tomcat error page rather than a 4xx.
+    ULB's own documentation opens with the remark "needs complete revisit !!" and leaves the
+    Publication export, Search API, RSS feeds, Sitemap and OAI harvesting sections unwritten.
+  contact:
+    name: DI-fusion, Bibliothèques de l'ULB
+    email: di-fusion@ulb.be
+    url: https://bib.ulb.be/en/find-documents/di-fusion
+  license:
+    name: DI-fusion terms of use
+    url: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+  termsOfService: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+externalDocs:
+  description: DI-fusion – Download & API (ULB Libraries, rev. 03/2023, PDF)
+  url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
+servers:
+  - url: https://difusion-svc.ulb.ac.be
+    description: Production export service, operated by the Université libre de Bruxelles
+tags:
+  - name: Scholar
+    description: Publication lists for one identified ULB scholar.
+  - name: Group
+    description: Publication lists for a group of ULB scholars.
+paths:
+  /scholar:
+    get:
+      tags: [ Scholar ]
+      operationId: exportScholarPublications
+      summary: Export the publication list of one scholar
+      description: |
+        Returns the publication list for a single scholar identified by ULB matricule or DAI
+        (Digital Author Identifier, `http://difusion.ulb.ac.be/dai/{matricule}`). Verified live on
+        2026-08-30 for `reftype` values xml-brief (text/xml), apa (application/pdf), bibtex
+        (text/x-bibtex), ris and csv (text/plain).
+      parameters:
+        - $ref: '#/components/parameters/scholarID'
+        - $ref: '#/components/parameters/scholarInst'
+        - $ref: '#/components/parameters/query'
+        - $ref: '#/components/parameters/reftype'
+        - $ref: '#/components/parameters/filetype'
+        - $ref: '#/components/parameters/groupByScholar'
+        - $ref: '#/components/parameters/roles'
+        - $ref: '#/components/parameters/markupScholar'
+        - $ref: '#/components/parameters/language'
+      responses:
+        '200':
+          description: Publication list in the requested reference format and file type.
+          content:
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/PublicationList'
+            application/pdf:
+              schema: { type: string, format: binary }
+            text/x-bibtex:
+              schema: { type: string }
+            text/plain:
+              schema: { type: string }
+        '403':
+          description: |
+            Forbidden. Returned by the Apache front end for `reftype=xml-full`, which the published
+            documentation describes but which is not publicly reachable. Body is an Apache HTML
+            error page, not XML.
+          content:
+            text/html:
+              schema: { type: string }
+        '500':
+          description: |
+            Internal server error. Returned by the Tomcat back end for a missing mandatory
+            parameter, an unknown `scholarID`, or `reftype=xml-brief-ext`. The service does not
+            emit 4xx for client error.
+          content:
+            text/html:
+              schema: { type: string }
+  /group:
+    get:
+      tags: [ Group ]
+      operationId: exportGroupPublications
+      summary: Export the publication list of a group of scholars
+      description: |
+        Returns the publication list for a group of ULB scholars, identified either by a valid
+        `groupID` or by the deprecated `scholarIDs` list. The two are mutually exclusive. ULB
+        publishes no directory of valid group identifiers, so this operation could not be
+        exercised with a live identifier during the 2026-08-30 probe; without one it returns
+        HTTP 500.
+      parameters:
+        - $ref: '#/components/parameters/groupID'
+        - $ref: '#/components/parameters/scholarIDs'
+        - $ref: '#/components/parameters/query'
+        - $ref: '#/components/parameters/reftype'
+        - $ref: '#/components/parameters/filetype'
+        - $ref: '#/components/parameters/groupByGroup'
+        - $ref: '#/components/parameters/roles'
+        - $ref: '#/components/parameters/markupGroup'
+        - $ref: '#/components/parameters/language'
+      responses:
+        '200':
+          description: Publication list in the requested reference format and file type.
+          content:
+            text/xml:
+              schema:
+                $ref: '#/components/schemas/PublicationList'
+            application/pdf:
+              schema: { type: string, format: binary }
+            text/x-bibtex:
+              schema: { type: string }
+            text/plain:
+              schema: { type: string }
+        '500':
+          description: Internal server error, including when no valid group identifier is supplied.
+          content:
+            text/html:
+              schema: { type: string }
+components:
+  parameters:
+    scholarID:
+      name: scholarID
+      in: query
+      required: true
+      description: Unique identifier of a scholar — an ULB matricule or a DAI.
+      schema: { type: string }
+      example: '19262'
+    scholarInst:
+      name: scholarInst
+      in: query
+      required: true
+      description: Identifier of an institution taking part in DI-fusion. Case insensitive.
+      schema:
+        type: string
+        enum: [ ULB, UMons ]
+      example: ULB
+    groupID:
+      name: groupID
+      in: query
+      required: false
+      description: Unique identifier of a group of scholars. Mutually exclusive with `scholarIDs`; one of the two is mandatory.
+      schema: { type: string }
+    scholarIDs:
+      name: scholarIDs
+      in: query
+      required: false
+      deprecated: true
+      description: Comma-separated list of scholar identifiers. Marked obsolete in ULB's documentation. Mutually exclusive with `groupID`.
+      schema: { type: string }
+    query:
+      name: query
+      in: query
+      required: false
+      description: Any valid Apache Solr query, Solr-encoded (a literal `:` must be escaped as `\:`). Combined with the selection on the scholar's DAI.
+      schema: { type: string }
+    reftype:
+      name: reftype
+      in: query
+      required: false
+      description: |
+        Bibliographic reference format of the resulting publication list. `xml-full` returns
+        HTTP 403 and `xml-brief-ext` returns HTTP 500 on the live service (probed 2026-08-30).
+      schema:
+        type: string
+        enum: [ apa, bibtex, ris, csv, xml-brief, xml-brief-ext, xml-full ]
+        default: xml-brief
+    filetype:
+      name: filetype
+      in: query
+      required: false
+      description: File type of the resulting file. Valid combinations with `reftype` are listed in `vocabulary/ulb-difusion-vocabulary.yml`.
+      schema:
+        type: string
+        enum: [ pdf, rtf, bibtex, csv, ris, xml ]
+    groupByScholar:
+      name: groupBy
+      in: query
+      required: false
+      description: Grouping applied to the publication list. A secondary grouping on descending year of publication is implicit except for `year`.
+      schema:
+        type: string
+        enum: [ genrecvulb, genredifusion, genrefnrs1, genrefnrs2, genrefnrs3, year ]
+        default: genrecvulb
+    groupByGroup:
+      name: groupBy
+      in: query
+      required: false
+      description: Grouping applied to the publication list. The F.R.S.-FNRS groupings are documented for the scholar operation only.
+      schema:
+        type: string
+        enum: [ genrecvulb, genredifusion, year ]
+        default: genrecvulb
+    roles:
+      name: roles
+      in: query
+      required: false
+      description: |
+        Any combination of the role letters to be considered — a (author), e (editor), p (promotor),
+        m (jury member), d (jury president).
+      schema:
+        type: string
+        pattern: '^[aepmd]{1,5}$'
+        default: aepmd
+    markupScholar:
+      name: markup
+      in: query
+      required: false
+      description: |
+        Any combination of the markup letters — a (abstract), b (scholar's name in bold),
+        h (grouping headers), l (full-text links), o (ORCID iD under the title), c (counts),
+        s (continuous sequence numbering), t (per-group numbering). `b` and `o` are available on
+        this operation only. Which letters take effect depends on the reftype/filetype pair.
+      schema:
+        type: string
+        pattern: '^[abhlocst]{1,8}$'
+    markupGroup:
+      name: markup
+      in: query
+      required: false
+      description: Any combination of a, h, l, c, s, t. The `b` and `o` options are not available on the group operation.
+      schema:
+        type: string
+        pattern: '^[ahlcst]{1,6}$'
+    language:
+      name: language
+      in: query
+      required: false
+      description: Language of the headers, footers and grouping labels in the resulting file.
+      schema:
+        type: string
+        enum: [ fr, en ]
+        default: fr
+  schemas:
+    PublicationList:
+      type: object
+      title: publist
+      description: |
+        Root of an xml-brief response. Rendered as XML; the shape below describes the element tree
+        captured in `examples/ulb-difusion-scholar-xml-brief.xml`.
+      properties:
+        header:
+          type: object
+          properties:
+            logoInst: { type: string, description: Server-side path to the institution logo used in rendered output. }
+            logoApplication: { type: string, description: Server-side path to the DI-fusion logo used in rendered output. }
+            title: { type: string, example: 'Liste de publications de 19262' }
+            subtitle: { type: string }
+            FullName: { type: string, description: Resolved display name of the scholar. }
+        body:
+          type: object
+          description: Contains either `doc` elements directly or `grouplevel1`/`grouplevel2` wrappers when a grouping is requested.
+          properties:
+            grouplevel1:
+              type: array
+              items: { $ref: '#/components/schemas/GroupLevel' }
+            doc:
+              type: array
+              items: { $ref: '#/components/schemas/Publication' }
+    GroupLevel:
+      type: object
+      description: A grouping wrapper. `title` carries the label in the requested language; `count` is present when markup=c.
+      properties:
+        title: { type: string }
+        count: { type: integer }
+        grouplevel2:
+          type: array
+          items: { $ref: '#/components/schemas/GroupLevel' }
+        doc:
+          type: array
+          items: { $ref: '#/components/schemas/Publication' }
+    Publication:
+      type: object
+      description: One publication, expressed as `arr name="..."` element lists in the XML rendering.
+      properties:
+        seqno: { type: integer, description: Present when sequence numbering is requested (markup=s or t). }
+        genre:
+          type: array
+          items: { type: string, description: DI-fusion publication type URI. }
+          example: [ 'info:ulb-repo/semantics/conferencePoster' ]
+        genrecvulb:
+          type: array
+          items: { type: string, description: Publication type as known in the ULB CV vocabulary. }
+        author:
+          type: array
+          items: { type: string }
+        pubdate:
+          type: array
+          items: { type: string, description: Publication date, ISO-like `YYYY-MM-DD`. }
+        title:
+          type: array
+          items: { type: string }
+        apa:
+          type: array
+          items: { type: string, description: The APA-formatted reference. }
+        startpage:
+          type: array
+          items: { type: string, format: uri, description: 'Handle System URL of the record''s DI-fusion detail page, e.g. http://hdl.handle.net/2013/ULB-DIPOT:oai:dipot.ulb.ac.be:2013/151029' }
+        abstract:
+          type: array
+          items: { type: string }
+          description: Present only when markup=a.
+        ftlink_unrestrictedaccess:
+          type: array
+          items: { type: string, format: uri }
+          description: Open-access full-text URLs. Present only when markup=l.
+        ftlink_restrictedaccess:
+          type: array
+          items: { type: string, format: uri }
+          description: Intranet or embargoed full-text URLs. Present only when markup=l.
+        ftlink_closedaccess:
+          type: array
+          items: { type: string, format: uri }
+          description: Closed-access full-text URLs. Present only when markup=l.

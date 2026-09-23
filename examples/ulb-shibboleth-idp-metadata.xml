@@ -1,0 +1,89 @@
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" xmlns:mdrpi="urn:oasis:names:tc:SAML:metadata:rpi" entityID="https://auth.ulb.be/idp">
+<Extensions>
+   <mdrpi:RegistrationInfo registrationAuthority="http://federation.belnet.be/">
+       <mdrpi:RegistrationPolicy xml:lang="en">http://federation.belnet.be/files/Belnet-metadata-registration-practice-statement.txt</mdrpi:RegistrationPolicy>
+   </mdrpi:RegistrationInfo>
+   <mdattr:EntityAttributes xmlns:mdattr="urn:oasis:names:tc:SAML:metadata:attribute">
+     <saml:Attribute xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" Name="http://macedir.org/entity-category-support">
+       <saml:AttributeValue>http://refeds.org/category/research-and-scholarship</saml:AttributeValue>
+     </saml:Attribute>
+      <saml:Attribute xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" NameFormat="urn:oasis:names:tc:SAML:2.0:attrname-format:uri" Name="urn:oasis:names:tc:SAML:attribute:assurance-certification">
+        <saml:AttributeValue>https://refeds.org/sirtfi</saml:AttributeValue>
+      </saml:Attribute>
+   </mdattr:EntityAttributes>
+</Extensions>   
+<IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+<Extensions>
+   <shibmd:Scope regexp="false">ulb.be</shibmd:Scope>
+   <mdui:UIInfo>
+       <mdui:DisplayName xml:lang="fr">Universite Libre de Bruxelles (ULB)</mdui:DisplayName>
+       <mdui:DisplayName xml:lang="en">Universite Libre de Bruxelles (ULB)</mdui:DisplayName>
+       <mdui:Description xml:lang="en">The Université libre de Bruxelles is a multicultural university with more than a third of its students and researchers coming from abroad. Internationalism is a daily reality at the Université libre de Bruxelles, where students live and work on campus in the image of Brussels, one of the most cosmopolitan cities in the world.</mdui:Description>
+       <mdui:Logo height="16" width="16">https://authenticator-app.ulb.be/app/icons/logomicro.jpg</mdui:Logo>
+       <mdui:Logo height="64" width="64">https://authenticator-app.ulb.be/app/icons/logosmall.jpg</mdui:Logo>
+       <mdui:Logo height="168" width="539">https://authenticator-app.ulb.be/app/icons/logolong.png</mdui:Logo>
+   </mdui:UIInfo>
+   <mdui:DiscoHints>
+       <mdui:IPHint>164.15.0.0/16</mdui:IPHint>
+       <mdui:DomainHint>ulb.be</mdui:DomainHint>
+       <mdui:GeolocationHint>geo:50.81315932634884,4.3822007410734125</mdui:GeolocationHint>
+   </mdui:DiscoHints>
+</Extensions>
+<KeyDescriptor use="signing">
+<ds:KeyInfo>
+<ds:X509Data>
+<ds:X509Certificate>MIIDDjCCAfagAwIBAgIVAPxU4gn57KVGyVHMux8+3JAflcdhMA0GCSqGSIb3DQEB CwUAMBYxFDASBgNVBAMMC2F1dGgudWxiLmJlMB4XDTIxMDIwMjIxMjM0NVoXDTQx MDIwMjIxMjM0NVowFjEUMBIGA1UEAwwLYXV0aC51bGIuYmUwggEiMA0GCSqGSIb3 DQEBAQUAA4IBDwAwggEKAoIBAQCFlaqYe9zqX536dtbi8XrIuu3kbDr1j6vkhlO6 rb+gQ5PpF8a7yJ+9Eg1TZHWn4UckNnXMKN6ZXqyM8EZ/gFt11lSZyBi8RtE0o0I8 HFuHRXGy8bPJTFy8BmfiqdkA9twvQ0a6CrvMq3yE56WD6yCJDDJuonQw99Bax++u G7+yoFN2e7YTf0xaHSrdrp0jS7AnsV0i0hjQ4jTLHmYRujcjSePg7JJAlQ8bgSp9 jaKt5ZiIosnirxNTXLcZ/P5jFyqZSRHNX8/ZHxtNEcdeGIS6dYf9c/PqE1E1L6bO R0lh+UEvk8N4+GqvO2AyoWIA0CTfmgNBjm6/2XyOAPX+JFurAgMBAAGjUzBRMB0G A1UdDgQWBBT0zMcc5JQF0kH2DGDaYEmpwWK+FDAwBgNVHREEKTAnggthdXRoLnVs Yi5iZYYYYXV0aC51bGIuYmUvaWRwL21ldGFkYXRhMA0GCSqGSIb3DQEBCwUAA4IB AQBlSY9FIBupqgWwAG/5iC5o2SIMiCXr7t1uCODbqg2dTPEcUUgE0BO2J5cZjGvq bISmIr2Zss/gCu6XC/u9WKH1atIKHA/r5qc0T9zVcdmD5OW5Uu5jpuFWLx48m5l7 9tehzhlOvlQVHSgxCavXMq+kz+jtdbbg+Do7gmLXIPKARTD86S28IrOFQ3wR9Oi5 IIKKpnliU7J1YrvbyoK/nv++BBi94QZtM8SNecS2tViCgEoqCBzTXuvnrZKPuI0j niwEpci75J7RyKrWR/pZNGzGV+asrzD7L2AO5Bgyo07bUlwZE/Fr/fn/53c7YmPE kRkFO1tOJaHm97f89f0kjtPC</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+</KeyDescriptor>
+<KeyDescriptor use="encryption">
+<ds:KeyInfo>
+<ds:X509Data>
+<ds:X509Certificate>MIIDDTCCAfWgAwIBAgIUW+i8WU4QRSxy8wV0D1cRZD0jjmEwDQYJKoZIhvcNAQEL BQAwFjEUMBIGA1UEAwwLYXV0aC51bGIuYmUwHhcNMjEwMjAyMjEyMzQ2WhcNNDEw MjAyMjEyMzQ2WjAWMRQwEgYDVQQDDAthdXRoLnVsYi5iZTCCASIwDQYJKoZIhvcN AQEBBQADggEPADCCAQoCggEBAJeL01p+GMoICYahevP2n6NVDoqebzrlwSRbumt2 /xobXeT38T5E/uNVFWkGgZew8ewilYHj7afn1B0Y8tHoXXSHCo55L5X50EHH9Opw ZMkZZtvSQSoAA+cLEaQiSc9L0Z8kl7DjCCqSlfkcK0RKwag2GVmtTIf6pFAeqEUD Ive+8KxwO98tl82shPyvbgtZNaUX/24wP1FmlD1iwt5Vij9kWzqdyl45tR74AaB7 cjAtAjRjYKlv15vVorhJADM2ScUwfTKl3ZnJ1G80DaZAbQ2rxwNmlZeD5dxwcu2f AE4YJ38Z/EeHWsgs5Fy4gszdFF4EgHVIlnSwjquKRmRf7FkCAwEAAaNTMFEwHQYD VR0OBBYEFKHfe3p9qFbRV/fFtiPkvnbfr89SMDAGA1UdEQQpMCeCC2F1dGgudWxi LmJlhhhhdXRoLnVsYi5iZS9pZHAvbWV0YWRhdGEwDQYJKoZIhvcNAQELBQADggEB AAE/h6LuugzLAbMCpyY5I0/CVRBvHaacA3QWZ9przv0Agcw/fqXhmWSzdlKD/7RM b3+RMCtxtzK9ckLC9pTz4QDdDSaFFbh75F3MRRaZbUWWvfcKvpJRasW/Wq6gHP5T Su6Hyv9E+A6AzE528QrYD/Rte4h9QaJD1a/Sh8wlaWkF2au3PkZF9q0rxCqcUgQY 0+myHW3HABm/PjikodzY4EXJDb8V6hLxP2ueIyRkDRLgHp46E4xxsr4QScwRVVuw qZmefxSTltQDFcTr93/U9wLbj1YMZlAYa8g6JOzzoijp5ynCY+zFOEH2Z7xWSs7D kTpEn02qods/iyfckCItZNE=</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+</KeyDescriptor>
+<SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://auth.ulb.be/idp/profile/SAML2/POST/SLO"/>
+<SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://auth.ulb.be/idp/profile/SAML2/Redirect/SLO"/>
+<NameIDFormat>urn:mace:shibboleth:1.0:nameIdentifier</NameIDFormat>
+<NameIDFormat>urn:oasis:names:tc:SAML:2.0:nameid-format:transient</NameIDFormat>
+<SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://auth.ulb.be/idp/profile/SAML2/POST/SSO"/>
+<SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://auth.ulb.be/idp/profile/SAML2/POST-SimpleSign/SSO"/>
+<SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://auth.ulb.be/idp/profile/SAML2/Redirect/SSO"/>
+<SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.ulb.be/idp/profile/SAML2/SOAP/ECP"/>
+</IDPSSODescriptor>
+<AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+<Extensions>
+<shibmd:Scope regexp="false">ulb.be</shibmd:Scope>
+</Extensions>
+<KeyDescriptor use="signing">
+<ds:KeyInfo>
+<ds:X509Data>
+<ds:X509Certificate>MIIDDjCCAfagAwIBAgIVAPxU4gn57KVGyVHMux8+3JAflcdhMA0GCSqGSIb3DQEB CwUAMBYxFDASBgNVBAMMC2F1dGgudWxiLmJlMB4XDTIxMDIwMjIxMjM0NVoXDTQx MDIwMjIxMjM0NVowFjEUMBIGA1UEAwwLYXV0aC51bGIuYmUwggEiMA0GCSqGSIb3 DQEBAQUAA4IBDwAwggEKAoIBAQCFlaqYe9zqX536dtbi8XrIuu3kbDr1j6vkhlO6 rb+gQ5PpF8a7yJ+9Eg1TZHWn4UckNnXMKN6ZXqyM8EZ/gFt11lSZyBi8RtE0o0I8 HFuHRXGy8bPJTFy8BmfiqdkA9twvQ0a6CrvMq3yE56WD6yCJDDJuonQw99Bax++u G7+yoFN2e7YTf0xaHSrdrp0jS7AnsV0i0hjQ4jTLHmYRujcjSePg7JJAlQ8bgSp9 jaKt5ZiIosnirxNTXLcZ/P5jFyqZSRHNX8/ZHxtNEcdeGIS6dYf9c/PqE1E1L6bO R0lh+UEvk8N4+GqvO2AyoWIA0CTfmgNBjm6/2XyOAPX+JFurAgMBAAGjUzBRMB0G A1UdDgQWBBT0zMcc5JQF0kH2DGDaYEmpwWK+FDAwBgNVHREEKTAnggthdXRoLnVs Yi5iZYYYYXV0aC51bGIuYmUvaWRwL21ldGFkYXRhMA0GCSqGSIb3DQEBCwUAA4IB AQBlSY9FIBupqgWwAG/5iC5o2SIMiCXr7t1uCODbqg2dTPEcUUgE0BO2J5cZjGvq bISmIr2Zss/gCu6XC/u9WKH1atIKHA/r5qc0T9zVcdmD5OW5Uu5jpuFWLx48m5l7 9tehzhlOvlQVHSgxCavXMq+kz+jtdbbg+Do7gmLXIPKARTD86S28IrOFQ3wR9Oi5 IIKKpnliU7J1YrvbyoK/nv++BBi94QZtM8SNecS2tViCgEoqCBzTXuvnrZKPuI0j niwEpci75J7RyKrWR/pZNGzGV+asrzD7L2AO5Bgyo07bUlwZE/Fr/fn/53c7YmPE kRkFO1tOJaHm97f89f0kjtPC</ds:X509Certificate>
+</ds:X509Data>
+</ds:KeyInfo>
+</KeyDescriptor>
+<AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://auth.ulb.be/idp/profile/SAML2/SOAP/AttributeQuery"/>
+</AttributeAuthorityDescriptor>
+<Organization>
+	<OrganizationName xml:lang="en">Universite Libre de Bruxelles</OrganizationName>
+	<OrganizationDisplayName xml:lang="en">Universite Libre de Bruxelles (ULB)</OrganizationDisplayName>
+	<OrganizationURL xml:lang="en">https://www.ulb.be/en</OrganizationURL>	
+</Organization>
+<ContactPerson contactType="support">
+	<GivenName>Idp Support</GivenName>
+	<EmailAddress>mailto:idp-support@ulb.be</EmailAddress>
+</ContactPerson>
+<ContactPerson contactType="technical">
+	<GivenName>Idp Technical</GivenName>
+	<EmailAddress>mailto:idp-tech@ulb.be</EmailAddress>
+</ContactPerson>
+<ContactPerson contactType="administrative">
+	<GivenName>Idp Administrative</GivenName>
+	<EmailAddress>mailto:idp-admin@ulb.be</EmailAddress>
+</ContactPerson>
+<ContactPerson xmlns:remd="http://refeds.org/metadata" contactType="other" remd:contactType="http://refeds.org/metadata/contactType/security">
+	<GivenName>Security Team</GivenName>
+	<EmailAddress>mailto:idp-security@ulb.be</EmailAddress>
+</ContactPerson>
+</EntityDescriptor>

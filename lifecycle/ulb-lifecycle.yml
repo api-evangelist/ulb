@@ -1,0 +1,75 @@
+name: ULB Programmable Surface Lifecycle
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 plus the document history page of DI-fusion – Download & API
+  (https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE)
+  and the eduGAIN entity registry.
+x-operator: institution
+summary: >-
+  ULB publishes no versioned API, no changelog, no deprecation policy and no status page. The one
+  version signal that exists is the document history table inside the DI-fusion PDF. Several
+  surfaces are visibly decaying: the richest documented format is blocked, the format added by the
+  most recent revision errors, the OAI-PMH endpoint cannot be harvested, the advertised unAPI
+  server does not answer, and the DSpace instance behind the full-text links is erroring.
+surfaces:
+  - name: DI-fusion Export API
+    base_url: https://difusion-svc.ulb.ac.be
+    state: live
+    versioning: >-
+      No version in the path, no version header, no media-type versioning. The only version marker
+      is the PDF's document history — "04/2014 Original document" and "03/2023 Updated:
+      xml-brief-ext, o option on markup" — which also carries ULB's own remark "needs complete
+      revisit !!".
+    documentation_state: >-
+      Incomplete by ULB's own admission. The Publication export, Search API, RSS feeds, Sitemap and
+      OAI harvesting service sections are listed in the table of contents and left unwritten; the
+      Publication section reads "todo", and the DAI definition is footnoted "(TODO)".
+    decay:
+      - 'reftype=xml-full — documented across five pages, returns HTTP 403.'
+      - 'reftype=xml-brief-ext — added by the 03/2023 revision, returns HTTP 500.'
+      - 'scholarIDs on /group — marked obsolete in ULB''s own documentation.'
+      - 'scholarInst=UMons — marked obsolete in ULB''s own documentation.'
+    verified: '2026-08-30'
+  - name: DI-fusion OAI-PMH
+    base_url: https://difusion.ulb.ac.be/vufind/OAI/Server
+    state: degraded
+    versioning: OAI-PMH protocolVersion 2.0. earliestDatestamp 2008-10-01T00:00:00Z.
+    decay:
+      - 'Discovery verbs return HTTP 500 with HTML appended after the protocol document.'
+      - 'Record-bearing verbs reject the advertised metadataPrefix=oai_dc.'
+      - 'repositoryName and repositoryIdentifier are empty; <request> echoes the VuFind demo default.'
+    verified: '2026-08-30'
+  - name: DI-fusion OpenSearch description
+    base_url: https://difusion.ulb.ac.be/vufind/Search/OpenSearch
+    state: live
+    versioning: OpenSearch 1.1.
+    decay: [ 'ShortName element is empty.' ]
+    verified: '2026-08-30'
+  - name: DI-fusion unAPI server
+    base_url: 'http://difusion-svc.ulb.ac.be:8080/funapi/dspace-pmh'
+    state: dead
+    decay: [ 'Advertised in the DI-fusion HTML head; port 8080 does not answer from the public internet.' ]
+    verified: '2026-08-30'
+  - name: DSpace at ULB (dipot)
+    base_url: https://dipot.ulb.ac.be/
+    state: erroring
+    decay: [ 'Returns "DSpace at ULB: Internal system error" under HTTP 500. Serves the full-text bitstreams the export API links to.' ]
+    verified: '2026-08-30'
+  - name: ULB Shibboleth Identity Provider
+    base_url: https://auth.ulb.be/idp
+    state: live
+    versioning: SAML 2.0. Registered in the Belnet R&E Federation and visible in eduGAIN since 2021-06-08.
+    decay: []
+    verified: '2026-08-30'
+  - name: GeHoL (timetable) and cible (library discovery)
+    base_url: 'https://gehol.ulb.be/ , https://cible.ulb.be/'
+    state: unreachable
+    decay: [ 'Both resolve in DNS (gehol 164.15.252.227, cible CNAME bib7.ulb.ac.be) but the TCP connection times out from the public internet. Neither can be assessed as a programmable surface.' ]
+    verified: '2026-08-30'
+signals_absent:
+  - No changelog or release notes for any surface.
+  - No deprecation policy and no sunset dates.
+  - No status page, and https://www.ulb.be/.well-known/security.txt returns 404.
+  - No OpenAPI, AsyncAPI, Postman collection or SDK published by ULB for any surface.
+  - No developer portal; the only API documentation is a PDF attachment on the library website.

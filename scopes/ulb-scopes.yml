@@ -1,0 +1,35 @@
+name: ULB Authorization Scopes
+generated: '2026-08-30'
+method: probed
+source: >-
+  Live probes on 2026-08-30 of every ULB surface listed in authentication/ulb-authentication.yml,
+  plus the SAML metadata at https://auth.ulb.be/idp/metadata.
+x-operator: institution
+scopes: []
+summary: >-
+  ULB defines no authorization scopes. Its two public machine-readable surfaces are unauthenticated
+  and therefore unscoped; its SAML identity provider expresses release policy through attribute
+  release and entity categories rather than through scopes, and the metadata carries no
+  RequestedAttribute set of its own.
+saml_release_signals:
+  - name: REFEDS Research and Scholarship
+    value: http://refeds.org/category/research-and-scholarship
+    meaning: >-
+      ULB's IdP supports the R&S entity category, which commits it to releasing a bounded attribute
+      bundle (persistent identifier, person name, email, affiliation) to R&S-tagged service
+      providers without per-service negotiation. This is the closest thing ULB publishes to a scope.
+    source: https://auth.ulb.be/idp/metadata
+    verified: '2026-08-30'
+  - name: shibmd:Scope
+    value: ulb.be
+    meaning: The single security domain the IdP is authoritative for; scoped attribute values are asserted only within `@ulb.be`.
+    source: https://auth.ulb.be/idp/metadata
+    verified: '2026-08-30'
+  - name: SIRTFI
+    value: https://refeds.org/sirtfi
+    meaning: >-
+      Security Incident Response Trust Framework for Federated Identity assurance certification —
+      an operational commitment, not an authorization scope, recorded here because it is the only
+      other machine-readable assurance ULB asserts.
+    source: https://auth.ulb.be/idp/metadata
+    verified: '2026-08-30'

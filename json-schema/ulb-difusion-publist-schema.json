@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/ulb/main/json-schema/ulb-difusion-publist-schema.json",
+  "title": "DI-fusion publication list (xml-brief)",
+  "description": "JSON Schema for the xml-brief publication list returned by the Universite libre de Bruxelles DI-fusion Export API at https://difusion-svc.ulb.ac.be/scholar. DI-fusion returns XML, not JSON; this schema describes the element tree so the payload can be validated after conversion. Field set derived from the live response captured in examples/ulb-difusion-scholar-xml-brief.xml on 2026-08-30, cross-checked against pages 6-7 of ULB's own published documentation.",
+  "x-generated": "2026-08-30",
+  "x-method": "derived",
+  "x-source": "Live response from https://difusion-svc.ulb.ac.be/scholar?scholarID=19262&scholarInst=ULB&groupBy=genredifusion&markup=ahc&reftype=xml-brief&filetype=xml&language=en (HTTP 200, text/xml, 17,651 bytes, 2026-08-30) plus DI-fusion - Download & API rev. 03/2023, pp. 6-7.",
+  "x-operator": "institution",
+  "type": "object",
+  "required": [
+    "header",
+    "body"
+  ],
+  "properties": {
+    "header": {
+      "type": "object",
+      "description": "Rendering header. Present on every response regardless of reftype.",
+      "properties": {
+        "logoInst": {
+          "type": "string",
+          "description": "Server-side path to the institution logo, e.g. /data/difusion-services/conf/awb-ulb-logo.jpg"
+        },
+        "logoApplication": {
+          "type": "string",
+          "description": "Server-side path to the DI-fusion logo."
+        },
+        "title": {
+          "type": "string",
+          "description": "Localised list title, e.g. 'Liste de publications de 19262'."
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "FullName": {
+          "type": "string",
+          "description": "Resolved display name of the scholar."
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "description": "Publication payload. Grouped into grouplevel1/grouplevel2 when groupBy is in effect, otherwise a flat doc list.",
+      "properties": {
+        "grouplevel1": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/groupLevel"
+          }
+        },
+        "doc": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/publication"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "groupLevel": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Grouping label, translated per the language parameter."
+        },
+        "count": {
+          "type": "integer",
+          "description": "Present only when markup contains c, and only at the highest grouping level."
+        },
+        "grouplevel2": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/groupLevel"
+          }
+        },
+        "doc": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/publication"
+          }
+        }
+      }
+    },
+    "publication": {
+      "type": "object",
+      "description": "One publication. Every field is emitted as an <arr name=\"...\"> list of <str> values, so all are arrays even when single-valued.",
+      "properties": {
+        "seqno": {
+          "type": "integer",
+          "description": "Present only when markup contains s or t."
+        },
+        "genre": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^info:ulb-repo/semantics/"
+          },
+          "description": "DI-fusion publication type. Vocabulary in vocabulary/ulb-difusion-vocabulary.yml."
+        },
+        "genrecvulb": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^info:ulb-repo/semantics/"
+          },
+          "description": "Publication type in the ULB CV vocabulary."
+        },
+        "author": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Author display names, 'Surname, Given' form."
+        },
+        "pubdate": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Publication date, YYYY-MM-DD."
+        },
+        "title": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "apa": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Pre-rendered APA reference string."
+        },
+        "startpage": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Handle System URL of the DI-fusion detail page."
+        },
+        "abstract": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Present only when markup contains a."
+        },
+        "ftlink_unrestrictedaccess": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Open-access full text. Present only when markup contains l."
+        },
+        "ftlink_restrictedaccess": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Intranet or embargoed full text. Present only when markup contains l."
+        },
+        "ftlink_closedaccess": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          },
+          "description": "Closed-access full text. Present only when markup contains l."
+        }
+      }
+    }
+  },
+  "x-observed-fields": [
+    "abstract",
+    "apa",
+    "author",
+    "genre",
+    "genrecvulb",
+    "pubdate",
+    "startpage",
+    "title"
+  ]
+}

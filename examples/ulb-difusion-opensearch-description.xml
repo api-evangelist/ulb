@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName></ShortName>
+  <Description>Library Catalog Search</Description>
+  <Image height="16" width="16" type="image/x-icon">https://difusion.ulb.ac.be/vufind/favicon.ico</Image>
+  <Contact>di-fusion@ulb.be</Contact>
+  <Url type="text/html" method="get" template="https://difusion.ulb.ac.be/vufind/Search/Home?lookfor={searchTerms}&amp;page={startPage?}"/>
+  <Url type="application/rss+xml" method="get" template="https://difusion.ulb.ac.be/vufind/Search/Home?lookfor={searchTerms}&amp;view=rss"/>
+  <Url type="application/x-suggestions+json" method="get" template="https://difusion.ulb.ac.be/vufind/Search/Suggest?lookfor={searchTerms}&amp;format=JSON"/>
+</OpenSearchDescription>

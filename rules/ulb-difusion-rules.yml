@@ -1,0 +1,115 @@
+name: DI-fusion Consumption Rules
+aid: ulb:difusion-export
+generated: '2026-08-30'
+method: derived
+source: >-
+  Derived from openapi/ulb-difusion-export-openapi.yml, openapi/ulb-difusion-oai-pmh-openapi.yml,
+  errors/ulb-difusion-errors.yml and the DI-fusion terms of use at
+  https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use (HTTP 200, 2026-08-30). These are
+  rules for CONSUMING ULB's surfaces safely, not a lint ruleset for the specification.
+x-operator: institution
+rules:
+  - id: difusion-no-4xx
+    severity: error
+    statement: >-
+      Never treat a 5xx from difusion-svc.ulb.ac.be as a transient outage. The service returns
+      HTTP 500 for missing mandatory parameters and for unknown scholar identifiers, so a retry
+      loop on 500 will hammer the host and never succeed. Validate scholarID and scholarInst
+      client-side before the call.
+    evidence: errors/ulb-difusion-errors.yml
+  - id: difusion-reftype-allowlist
+    severity: error
+    statement: >-
+      Request only reftype values verified reachable — xml-brief, apa, bibtex, ris, csv. xml-full
+      returns 403 and xml-brief-ext returns 500, despite both being documented.
+    evidence: errors/ulb-difusion-errors.yml
+  - id: difusion-reftype-filetype-pairing
+    severity: error
+    statement: >-
+      Send filetype only in a pair the service permits; the allowed combinations are enumerated in
+      vocabulary/ulb-difusion-vocabulary.yml under reftype-filetype. csv accepts only csv, and the
+      xml reftypes accept only xml.
+    evidence: vocabulary/ulb-difusion-vocabulary.yml
+  - id: difusion-markup-scope
+    severity: warn
+    statement: >-
+      The markup letters b and o exist on the scholar operation only, and only take effect for
+      certain reftype/filetype pairs. Sending an ineffective markup letter is silently ignored, so
+      do not infer support from a 200.
+    evidence: vocabulary/ulb-difusion-vocabulary.yml
+  - id: difusion-solr-encoding
+    severity: error
+    statement: >-
+      The query parameter is passed through to Apache Solr. A literal colon must be escaped as
+      `\:` and the whole value URL-encoded, or the filter silently changes meaning.
+    evidence: openapi/ulb-difusion-export-openapi.yml
+  - id: difusion-xml-not-json
+    severity: warn
+    statement: >-
+      Every non-binary response is XML or plain text with charset=UTF-8. There is no JSON
+      representation and no content negotiation; Accept headers are ignored. Parse the element
+      tree described in json-schema/ulb-difusion-publist-schema.json.
+    evidence: json-schema/ulb-difusion-publist-schema.json
+  - id: difusion-arrays-always
+    severity: warn
+    statement: >-
+      Every record field arrives as an `<arr name="...">` list even when single-valued. Treat all
+      of them as arrays; a consumer that assumes a scalar will break on the first multi-author
+      record.
+    evidence: examples/ulb-difusion-scholar-xml-brief.xml
+  - id: difusion-conditional-fields
+    severity: warn
+    statement: >-
+      abstract appears only under markup=a and the three ftlink_* fields only under markup=l. Their
+      absence is a request-shape consequence, never a statement that the repository lacks the data.
+    evidence: json-schema/ulb-difusion-publist-schema.json
+  - id: difusion-fulltext-host-unstable
+    severity: warn
+    statement: >-
+      ftlink_* values point at https://dipot.ulb.ac.be/dspace/bitstream/..., and dipot.ulb.ac.be
+      was returning "DSpace at ULB: Internal system error" under HTTP 500 on 2026-08-30. Do not
+      assume a returned full-text link resolves; check it.
+    evidence: errors/ulb-difusion-errors.yml
+  - id: oai-do-not-trust-registration
+    severity: error
+    statement: >-
+      DI-fusion is registered as OAI-PMH compliant in OpenDOAR, ROAR and Sherpa, and its endpoint
+      answers Identify and ListMetadataFormats. It still harvests nothing — every record-bearing
+      verb rejects the metadataPrefix it advertises. Verify with an actual ListRecords before
+      scheduling a harvest.
+    evidence: errors/ulb-difusion-errors.yml
+  - id: oai-parse-before-status
+    severity: warn
+    statement: >-
+      The OAI-PMH endpoint returns HTTP 500 alongside a valid protocol document, with HTML appended
+      after </OAI-PMH>. A harvester must truncate at the closing tag and must not gate on the status
+      code, or it will discard a correct Identify response.
+    evidence: examples/ulb-difusion-oai-identify.xml
+  - id: oai-ignore-echoed-baseurl
+    severity: warn
+    statement: >-
+      Do not follow the `<request>` value in any response from this endpoint. It echoes the
+      unmodified VuFind demo default http://digital.library.villanova.edu/OAIServer.php, which is
+      Villanova's host, not ULB's.
+    evidence: examples/ulb-difusion-oai-identify.xml
+  - id: difusion-attribution
+    severity: error
+    statement: >-
+      The DI-fusion terms of use permit harvesting for non-profit purposes provided the OAI
+      identifier or the source link is indicated. Carry startpage or the OAI identifier through to
+      any derived product.
+    evidence: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
+  - id: difusion-personal-data
+    severity: error
+    statement: >-
+      Publication lists are keyed on an ULB matricule — an internal person identifier — and resolve
+      to a named individual. ULB is a Belgian public institution under GDPR. Do not build or
+      republish a matricule-to-person index from bulk enumeration of scholarID.
+    evidence: https://www.ulb.be/fr/mentions-legales/politique-de-protection-des-donnees-a-lulb
+  - id: difusion-no-rate-limit-published
+    severity: warn
+    statement: >-
+      No rate-limit, quota or Retry-After header is present on any response, and ULB publishes no
+      usage policy for the export service. Absence of a published limit is not permission for
+      volume; pace requests and identify your client.
+    evidence: authentication/ulb-authentication.yml

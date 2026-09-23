@@ -1,0 +1,61 @@
+name: ULB Captured Responses
+generated: '2026-08-30'
+method: probed
+source: Live HTTP responses captured from ULB-operated hosts on 2026-08-30 with a desktop browser User-Agent. Every file is a verbatim capture, not a hand-written sample.
+x-operator: institution
+examples:
+  - file: ulb-difusion-scholar-xml-brief.xml
+    request: 'GET https://difusion-svc.ulb.ac.be/scholar?scholarID=19262&scholarInst=ULB&groupBy=genredifusion&markup=ahc&reftype=xml-brief&filetype=xml&language=en'
+    status: 200
+    content_type: text/xml;charset=UTF-8
+    bytes: 17651
+    method: probed
+    describes: openapi/ulb-difusion-export-openapi.yml#/paths/~1scholar/get
+  - file: ulb-difusion-scholar-bibtex.bib
+    request: 'GET https://difusion-svc.ulb.ac.be/scholar?scholarID=19262&scholarInst=ULB&reftype=bibtex&filetype=bibtex'
+    status: 200
+    content_type: text/x-bibtex;charset=UTF-8
+    bytes: 8421
+    method: probed
+    describes: openapi/ulb-difusion-export-openapi.yml#/paths/~1scholar/get
+  - file: ulb-difusion-oai-identify.xml
+    request: 'GET https://difusion.ulb.ac.be/vufind/OAI/Server?verb=Identify'
+    status: 500
+    content_type: text/xml
+    bytes: 1336
+    method: probed
+    note: >-
+      Truncated at </OAI-PMH>. The live response is 50,003 bytes — this protocol document followed
+      by the literal string "Unknown Action" and a full HTML page. The truncation is recorded here
+      rather than silently applied.
+    describes: openapi/ulb-difusion-oai-pmh-openapi.yml
+  - file: ulb-difusion-oai-listmetadataformats.xml
+    request: 'GET https://difusion.ulb.ac.be/vufind/OAI/Server?verb=ListMetadataFormats'
+    status: 500
+    content_type: text/xml
+    bytes: 739
+    method: probed
+    note: Truncated at </OAI-PMH>; the live response is 49,406 bytes with ~48,600 bytes of appended HTML.
+    describes: openapi/ulb-difusion-oai-pmh-openapi.yml
+  - file: ulb-difusion-oai-listrecords-error.xml
+    request: 'GET https://difusion.ulb.ac.be/vufind/OAI/Server?verb=ListRecords&metadataPrefix=oai_dc'
+    status: 200
+    content_type: text/xml
+    bytes: 626
+    method: probed
+    note: 'The advertised metadataPrefix, correctly supplied, rejected as badArgument. Verbatim, untruncated.'
+    describes: errors/ulb-difusion-errors.yml
+  - file: ulb-difusion-opensearch-description.xml
+    request: 'GET https://difusion.ulb.ac.be/vufind/Search/OpenSearch?method=describe'
+    status: 200
+    content_type: text/xml
+    bytes: 785
+    method: probed
+    describes: conformance/ulb-domain-standards.yml
+  - file: ulb-shibboleth-idp-metadata.xml
+    request: 'GET https://auth.ulb.be/idp/metadata'
+    status: 200
+    content_type: text/xml;charset=UTF-8
+    bytes: 8686
+    method: probed
+    describes: conformance/ulb-domain-standards.yml
