@@ -68,108 +68,23 @@ paths:
               schema:
                 type: string
 components:
-  parameters:
-    markupGroup:
-      name: markup
-      in: query
-      required: false
-      description: Any combination of a, h, l, c, s, t. The `b` and `o` options are not available on the group operation.
-      schema:
-        type: string
-        pattern: ^[ahlcst]{1,6}$
-    filetype:
-      name: filetype
-      in: query
-      required: false
-      description: File type of the resulting file. Valid combinations with `reftype` are listed in `vocabulary/ulb-difusion-vocabulary.yml`.
-      schema:
-        type: string
-        enum:
-        - pdf
-        - rtf
-        - bibtex
-        - csv
-        - ris
-        - xml
-    reftype:
-      name: reftype
-      in: query
-      required: false
-      description: 'Bibliographic reference format of the resulting publication list. `xml-full` returns
-
-        HTTP 403 and `xml-brief-ext` returns HTTP 500 on the live service (probed 2026-08-30).
-
-        '
-      schema:
-        type: string
-        enum:
-        - apa
-        - bibtex
-        - ris
-        - csv
-        - xml-brief
-        - xml-brief-ext
-        - xml-full
-        default: xml-brief
-    query:
-      name: query
-      in: query
-      required: false
-      description: Any valid Apache Solr query, Solr-encoded (a literal `:` must be escaped as `\:`). Combined with the selection on the scholar's DAI.
-      schema:
-        type: string
-    roles:
-      name: roles
-      in: query
-      required: false
-      description: 'Any combination of the role letters to be considered — a (author), e (editor), p (promotor),
-
-        m (jury member), d (jury president).
-
-        '
-      schema:
-        type: string
-        pattern: ^[aepmd]{1,5}$
-        default: aepmd
-    scholarIDs:
-      name: scholarIDs
-      in: query
-      required: false
-      deprecated: true
-      description: Comma-separated list of scholar identifiers. Marked obsolete in ULB's documentation. Mutually exclusive with `groupID`.
-      schema:
-        type: string
-    groupByGroup:
-      name: groupBy
-      in: query
-      required: false
-      description: Grouping applied to the publication list. The F.R.S.-FNRS groupings are documented for the scholar operation only.
-      schema:
-        type: string
-        enum:
-        - genrecvulb
-        - genredifusion
-        - year
-        default: genrecvulb
-    language:
-      name: language
-      in: query
-      required: false
-      description: Language of the headers, footers and grouping labels in the resulting file.
-      schema:
-        type: string
-        enum:
-        - fr
-        - en
-        default: fr
-    groupID:
-      name: groupID
-      in: query
-      required: false
-      description: Unique identifier of a group of scholars. Mutually exclusive with `scholarIDs`; one of the two is mandatory.
-      schema:
-        type: string
   schemas:
+    GroupLevel:
+      type: object
+      description: A grouping wrapper. `title` carries the label in the requested language; `count` is present when markup=c.
+      properties:
+        title:
+          type: string
+        count:
+          type: integer
+        grouplevel2:
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupLevel'
+        doc:
+          type: array
+          items:
+            $ref: '#/components/schemas/Publication'
     PublicationList:
       type: object
       title: publist
@@ -208,22 +123,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Publication'
-    GroupLevel:
-      type: object
-      description: A grouping wrapper. `title` carries the label in the requested language; `count` is present when markup=c.
-      properties:
-        title:
-          type: string
-        count:
-          type: integer
-        grouplevel2:
-          type: array
-          items:
-            $ref: '#/components/schemas/GroupLevel'
-        doc:
-          type: array
-          items:
-            $ref: '#/components/schemas/Publication'
     Publication:
       type: object
       description: One publication, expressed as `arr name="..."` element lists in the XML rendering.
@@ -291,6 +190,107 @@ components:
             type: string
             format: uri
           description: Closed-access full-text URLs. Present only when markup=l.
+  parameters:
+    query:
+      name: query
+      in: query
+      required: false
+      description: Any valid Apache Solr query, Solr-encoded (a literal `:` must be escaped as `\:`). Combined with the selection on the scholar's DAI.
+      schema:
+        type: string
+    filetype:
+      name: filetype
+      in: query
+      required: false
+      description: File type of the resulting file. Valid combinations with `reftype` are listed in `vocabulary/ulb-difusion-vocabulary.yml`.
+      schema:
+        type: string
+        enum:
+        - pdf
+        - rtf
+        - bibtex
+        - csv
+        - ris
+        - xml
+    language:
+      name: language
+      in: query
+      required: false
+      description: Language of the headers, footers and grouping labels in the resulting file.
+      schema:
+        type: string
+        enum:
+        - fr
+        - en
+        default: fr
+    scholarIDs:
+      name: scholarIDs
+      in: query
+      required: false
+      deprecated: true
+      description: Comma-separated list of scholar identifiers. Marked obsolete in ULB's documentation. Mutually exclusive with `groupID`.
+      schema:
+        type: string
+    groupByGroup:
+      name: groupBy
+      in: query
+      required: false
+      description: Grouping applied to the publication list. The F.R.S.-FNRS groupings are documented for the scholar operation only.
+      schema:
+        type: string
+        enum:
+        - genrecvulb
+        - genredifusion
+        - year
+        default: genrecvulb
+    roles:
+      name: roles
+      in: query
+      required: false
+      description: 'Any combination of the role letters to be considered — a (author), e (editor), p (promotor),
+
+        m (jury member), d (jury president).
+
+        '
+      schema:
+        type: string
+        pattern: ^[aepmd]{1,5}$
+        default: aepmd
+    reftype:
+      name: reftype
+      in: query
+      required: false
+      description: 'Bibliographic reference format of the resulting publication list. `xml-full` returns
+
+        HTTP 403 and `xml-brief-ext` returns HTTP 500 on the live service (probed 2026-08-30).
+
+        '
+      schema:
+        type: string
+        enum:
+        - apa
+        - bibtex
+        - ris
+        - csv
+        - xml-brief
+        - xml-brief-ext
+        - xml-full
+        default: xml-brief
+    markupGroup:
+      name: markup
+      in: query
+      required: false
+      description: Any combination of a, h, l, c, s, t. The `b` and `o` options are not available on the group operation.
+      schema:
+        type: string
+        pattern: ^[ahlcst]{1,6}$
+    groupID:
+      name: groupID
+      in: query
+      required: false
+      description: Unique identifier of a group of scholars. Mutually exclusive with `scholarIDs`; one of the two is mandatory.
+      schema:
+        type: string
 externalDocs:
   description: DI-fusion – Download & API (ULB Libraries, rev. 03/2023, PDF)
   url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
