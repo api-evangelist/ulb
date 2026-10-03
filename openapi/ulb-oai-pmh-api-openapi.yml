@@ -114,23 +114,6 @@ paths:
                 $ref: '#/components/schemas/OaiPmhResponse'
 components:
   schemas:
-    OaiError:
-      type: object
-      properties:
-        code:
-          type: string
-          enum:
-          - badArgument
-          - badResumptionToken
-          - badVerb
-          - cannotDisseminateFormat
-          - idDoesNotExist
-          - noRecordsMatch
-          - noMetadataFormats
-          - noSetHierarchy
-        message:
-          type: string
-          example: Missing Metadata Prefix
     Identify:
       type: object
       properties:
@@ -192,6 +175,23 @@ components:
                   metadataNamespace:
                     type: string
                     format: uri
+    OaiError:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - badArgument
+          - badResumptionToken
+          - badVerb
+          - cannotDisseminateFormat
+          - idDoesNotExist
+          - noRecordsMatch
+          - noMetadataFormats
+          - noSetHierarchy
+        message:
+          type: string
+          example: Missing Metadata Prefix
 externalDocs:
   description: The Open Archives Initiative Protocol for Metadata Harvesting, version 2.0
   url: http://www.openarchives.org/OAI/openarchivesprotocol.html

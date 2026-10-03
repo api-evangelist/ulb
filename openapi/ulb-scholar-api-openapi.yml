@@ -84,6 +84,122 @@ paths:
               schema:
                 type: string
 components:
+  parameters:
+    scholarInst:
+      name: scholarInst
+      in: query
+      required: true
+      description: Identifier of an institution taking part in DI-fusion. Case insensitive.
+      schema:
+        type: string
+        enum:
+        - ULB
+        - UMons
+      example: ULB
+    filetype:
+      name: filetype
+      in: query
+      required: false
+      description: File type of the resulting file. Valid combinations with `reftype` are listed in `vocabulary/ulb-difusion-vocabulary.yml`.
+      schema:
+        type: string
+        enum:
+        - pdf
+        - rtf
+        - bibtex
+        - csv
+        - ris
+        - xml
+    scholarID:
+      name: scholarID
+      in: query
+      required: true
+      description: Unique identifier of a scholar — an ULB matricule or a DAI.
+      schema:
+        type: string
+      example: '19262'
+    markupScholar:
+      name: markup
+      in: query
+      required: false
+      description: 'Any combination of the markup letters — a (abstract), b (scholar''s name in bold),
+
+        h (grouping headers), l (full-text links), o (ORCID iD under the title), c (counts),
+
+        s (continuous sequence numbering), t (per-group numbering). `b` and `o` are available on
+
+        this operation only. Which letters take effect depends on the reftype/filetype pair.
+
+        '
+      schema:
+        type: string
+        pattern: ^[abhlocst]{1,8}$
+    query:
+      name: query
+      in: query
+      required: false
+      description: Any valid Apache Solr query, Solr-encoded (a literal `:` must be escaped as `\:`). Combined with the selection on the scholar's DAI.
+      schema:
+        type: string
+    language:
+      name: language
+      in: query
+      required: false
+      description: Language of the headers, footers and grouping labels in the resulting file.
+      schema:
+        type: string
+        enum:
+        - fr
+        - en
+        default: fr
+    groupByScholar:
+      name: groupBy
+      in: query
+      required: false
+      description: Grouping applied to the publication list. A secondary grouping on descending year of publication is implicit except for `year`.
+      schema:
+        type: string
+        enum:
+        - genrecvulb
+        - genredifusion
+        - genrefnrs1
+        - genrefnrs2
+        - genrefnrs3
+        - year
+        default: genrecvulb
+    reftype:
+      name: reftype
+      in: query
+      required: false
+      description: 'Bibliographic reference format of the resulting publication list. `xml-full` returns
+
+        HTTP 403 and `xml-brief-ext` returns HTTP 500 on the live service (probed 2026-08-30).
+
+        '
+      schema:
+        type: string
+        enum:
+        - apa
+        - bibtex
+        - ris
+        - csv
+        - xml-brief
+        - xml-brief-ext
+        - xml-full
+        default: xml-brief
+    roles:
+      name: roles
+      in: query
+      required: false
+      description: 'Any combination of the role letters to be considered — a (author), e (editor), p (promotor),
+
+        m (jury member), d (jury president).
+
+        '
+      schema:
+        type: string
+        pattern: ^[aepmd]{1,5}$
+        default: aepmd
   schemas:
     GroupLevel:
       type: object
@@ -101,44 +217,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Publication'
-    PublicationList:
-      type: object
-      title: publist
-      description: 'Root of an xml-brief response. Rendered as XML; the shape below describes the element tree
-
-        captured in `examples/ulb-difusion-scholar-xml-brief.xml`.
-
-        '
-      properties:
-        header:
-          type: object
-          properties:
-            logoInst:
-              type: string
-              description: Server-side path to the institution logo used in rendered output.
-            logoApplication:
-              type: string
-              description: Server-side path to the DI-fusion logo used in rendered output.
-            title:
-              type: string
-              example: Liste de publications de 19262
-            subtitle:
-              type: string
-            FullName:
-              type: string
-              description: Resolved display name of the scholar.
-        body:
-          type: object
-          description: Contains either `doc` elements directly or `grouplevel1`/`grouplevel2` wrappers when a grouping is requested.
-          properties:
-            grouplevel1:
-              type: array
-              items:
-                $ref: '#/components/schemas/GroupLevel'
-            doc:
-              type: array
-              items:
-                $ref: '#/components/schemas/Publication'
     Publication:
       type: object
       description: One publication, expressed as `arr name="..."` element lists in the XML rendering.
@@ -206,122 +284,44 @@ components:
             type: string
             format: uri
           description: Closed-access full-text URLs. Present only when markup=l.
-  parameters:
-    markupScholar:
-      name: markup
-      in: query
-      required: false
-      description: 'Any combination of the markup letters — a (abstract), b (scholar''s name in bold),
+    PublicationList:
+      type: object
+      title: publist
+      description: 'Root of an xml-brief response. Rendered as XML; the shape below describes the element tree
 
-        h (grouping headers), l (full-text links), o (ORCID iD under the title), c (counts),
-
-        s (continuous sequence numbering), t (per-group numbering). `b` and `o` are available on
-
-        this operation only. Which letters take effect depends on the reftype/filetype pair.
+        captured in `examples/ulb-difusion-scholar-xml-brief.xml`.
 
         '
-      schema:
-        type: string
-        pattern: ^[abhlocst]{1,8}$
-    scholarInst:
-      name: scholarInst
-      in: query
-      required: true
-      description: Identifier of an institution taking part in DI-fusion. Case insensitive.
-      schema:
-        type: string
-        enum:
-        - ULB
-        - UMons
-      example: ULB
-    query:
-      name: query
-      in: query
-      required: false
-      description: Any valid Apache Solr query, Solr-encoded (a literal `:` must be escaped as `\:`). Combined with the selection on the scholar's DAI.
-      schema:
-        type: string
-    filetype:
-      name: filetype
-      in: query
-      required: false
-      description: File type of the resulting file. Valid combinations with `reftype` are listed in `vocabulary/ulb-difusion-vocabulary.yml`.
-      schema:
-        type: string
-        enum:
-        - pdf
-        - rtf
-        - bibtex
-        - csv
-        - ris
-        - xml
-    groupByScholar:
-      name: groupBy
-      in: query
-      required: false
-      description: Grouping applied to the publication list. A secondary grouping on descending year of publication is implicit except for `year`.
-      schema:
-        type: string
-        enum:
-        - genrecvulb
-        - genredifusion
-        - genrefnrs1
-        - genrefnrs2
-        - genrefnrs3
-        - year
-        default: genrecvulb
-    scholarID:
-      name: scholarID
-      in: query
-      required: true
-      description: Unique identifier of a scholar — an ULB matricule or a DAI.
-      schema:
-        type: string
-      example: '19262'
-    roles:
-      name: roles
-      in: query
-      required: false
-      description: 'Any combination of the role letters to be considered — a (author), e (editor), p (promotor),
-
-        m (jury member), d (jury president).
-
-        '
-      schema:
-        type: string
-        pattern: ^[aepmd]{1,5}$
-        default: aepmd
-    reftype:
-      name: reftype
-      in: query
-      required: false
-      description: 'Bibliographic reference format of the resulting publication list. `xml-full` returns
-
-        HTTP 403 and `xml-brief-ext` returns HTTP 500 on the live service (probed 2026-08-30).
-
-        '
-      schema:
-        type: string
-        enum:
-        - apa
-        - bibtex
-        - ris
-        - csv
-        - xml-brief
-        - xml-brief-ext
-        - xml-full
-        default: xml-brief
-    language:
-      name: language
-      in: query
-      required: false
-      description: Language of the headers, footers and grouping labels in the resulting file.
-      schema:
-        type: string
-        enum:
-        - fr
-        - en
-        default: fr
+      properties:
+        header:
+          type: object
+          properties:
+            logoInst:
+              type: string
+              description: Server-side path to the institution logo used in rendered output.
+            logoApplication:
+              type: string
+              description: Server-side path to the DI-fusion logo used in rendered output.
+            title:
+              type: string
+              example: Liste de publications de 19262
+            subtitle:
+              type: string
+            FullName:
+              type: string
+              description: Resolved display name of the scholar.
+        body:
+          type: object
+          description: Contains either `doc` elements directly or `grouplevel1`/`grouplevel2` wrappers when a grouping is requested.
+          properties:
+            grouplevel1:
+              type: array
+              items:
+                $ref: '#/components/schemas/GroupLevel'
+            doc:
+              type: array
+              items:
+                $ref: '#/components/schemas/Publication'
 externalDocs:
   description: DI-fusion – Download & API (ULB Libraries, rev. 03/2023, PDF)
   url: https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
