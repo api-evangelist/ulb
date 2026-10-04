@@ -1,41 +1,39 @@
-# Kin Score artifact — ulb — 2026-08-30T203505
+# Kin Score artifact — ulb — 2026-09-24T090406
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: ulb
-  schema_version: 0.17.2
-  scored_at: '2026-08-30'
-  run_ts: 2026-08-30T203505
-  composite: 18.8
-  band: emerging
+  schema_version: 0.22.0
+  scored_at: '2026-09-24'
+  run_ts: 2026-09-24T090406
+  composite: 42.5
+  band: developing
   facets:
-    discoverability: 64.8
-    contract_quality: 10.7
-    governance: 0.0
+    discoverability: 74.1
+    contract_quality: 28.0
+    contract_governance: 15.2
     operational_transparency: 23.7
-    developer_ergonomics: 9.5
-    commercial_clarity: 28.9
-    contract_governance: 0.0
-    access_clarity: 28.9
+    developer_ergonomics: 38.1
+    access_clarity: 50.0
   agent_readiness:
-    score: 2.5
-    band: human-only
+    score: 22.3
+    band: agent-aware
     dimensions:
-      spec_presence: false
+      spec_presence: true
       agentic_access: false
-      reversibility_documented: false
+      reversibility_documented: na
       mcp_server: false
-      auth_clarity: false
-      idempotency: false
+      auth_clarity: bearer
+      idempotency: na
       error_semantics: false
-      openapi_examples: false
+      openapi_examples: documented
       rate_limit_signal: documented
       event_surface_described: false
       agent_skills: false
       well_known_catalog: false
       consent_identity: false
       agent_card: false
-      dry_run_mode: false
+      dry_run_mode: na
       delegated_identity: false
       protected_resource_metadata: false
       dynamic_client_registration: false
@@ -44,5 +42,12 @@ kin_score:
     applies: true
     regime: Education & Research
     regime_id: education
-    score: 20.4
+    score: 64.8
     matched_via: tags
+  provenance:
+    conformance: first-party
+    contracts:
+      total: 3
+      derived: 3
+      coverage: 100.0
+      callable: 100.0
