@@ -114,35 +114,6 @@ paths:
                 $ref: '#/components/schemas/OaiPmhResponse'
 components:
   schemas:
-    Identify:
-      type: object
-      properties:
-        repositoryName:
-          type: string
-          description: Empty on this deployment.
-        baseURL:
-          type: string
-          format: uri
-          example: https://difusion.ulb.ac.be/vufind/OAI/Server
-        protocolVersion:
-          type: string
-          example: '2.0'
-        adminEmail:
-          type: string
-          format: email
-          example: di-fusion@ulb.be
-        earliestDatestamp:
-          type: string
-          example: '2008-10-01T00:00:00Z'
-        deletedRecord:
-          type: string
-          enum:
-          - 'no'
-          - persistent
-          - transient
-        granularity:
-          type: string
-          example: YYYY-MM-DDThh:mm:ssZ
     OaiPmhResponse:
       type: object
       title: OAI-PMH
@@ -192,6 +163,35 @@ components:
         message:
           type: string
           example: Missing Metadata Prefix
+    Identify:
+      type: object
+      properties:
+        repositoryName:
+          type: string
+          description: Empty on this deployment.
+        baseURL:
+          type: string
+          format: uri
+          example: https://difusion.ulb.ac.be/vufind/OAI/Server
+        protocolVersion:
+          type: string
+          example: '2.0'
+        adminEmail:
+          type: string
+          format: email
+          example: di-fusion@ulb.be
+        earliestDatestamp:
+          type: string
+          example: '2008-10-01T00:00:00Z'
+        deletedRecord:
+          type: string
+          enum:
+          - 'no'
+          - persistent
+          - transient
+        granularity:
+          type: string
+          example: YYYY-MM-DDThh:mm:ssZ
 externalDocs:
   description: The Open Archives Initiative Protocol for Metadata Harvesting, version 2.0
   url: http://www.openarchives.org/OAI/openarchivesprotocol.html
