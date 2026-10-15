@@ -1,0 +1,37 @@
+edges:
+- partner_name: eduGAIN
+  partner: null
+  type: register
+  channel: standard-directory
+  relationship: network-participant
+  direction: partner-built
+  evidence: https://technical.edugain.org/api.php?action=list_entities&type=idp&format=json
+  category: research and education identity federation
+  contract_reference:
+    network: eduGAIN (GÉANT interfederation)
+    spec_file: null
+    roles:
+    - identity-provider
+    role: identity-provider
+    federations:
+    - BELNET
+    matched_by: domain:ulb.be
+    entities:
+    - entity_id: https://auth.ulb.be/idp
+      role: identity-provider
+      federation: BELNET
+      display_name: Universite Libre de Bruxelles (ULB)
+      entity_categories:
+      - '11'
+      - '76'
+      sirtfi: true
+      coco: false
+    detected_by: sweep-higher-ed.py
+    detected: '2026-10-15'
+  detected_by: sweep-higher-ed.py
+  first_seen: '2026-10-15'
+generated: '2026-10-15'
+method: searched
+checked:
+- https://technical.edugain.org/api.php?action=list_entities&type=idp&format=json
+- https://technical.edugain.org/api.php?action=list_entities&type=sp&format=json
