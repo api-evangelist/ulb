@@ -2,10 +2,10 @@
   "repo": "ulb",
   "feeds": [
     {
-      "source": "https://www.ulb.be/en/contact-us",
-      "feed_url": "https://www.ulb.be/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=1571625036018525&LANGUE=1",
+      "source": "https://www.ulb.be/fr/actus-et-agenda",
+      "feed_url": "https://actus.ulb.be/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=1531226487406&LANGUE=0",
       "title": "",
-      "saved": 0,
+      "saved": 10,
       "method": "discovered"
     },
     {
@@ -16,6 +16,6 @@
       "method": "feed"
     }
   ],
-  "post_count": 2,
-  "fetched": "2026-10-03T12:30:02Z"
+  "post_count": 12,
+  "fetched": "2026-10-10T13:15:00Z"
 }
