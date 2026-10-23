@@ -5,8 +5,15 @@
       "source": "https://www.ulb.be/fr/actus-et-agenda",
       "feed_url": "https://actus.ulb.be/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=1531226487406&LANGUE=0",
       "title": "",
-      "saved": 10,
+      "saved": 0,
       "method": "discovered"
+    },
+    {
+      "source": "https://actus.ulb.be/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=1531226487406&LANGUE=0",
+      "feed_url": "https://actus.ulb.be/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=1531226487406&LANGUE=0",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
     },
     {
       "source": "https://www.ulb.be/adminsite/webservices/export_rss.jsp?NOMBRE=10&CODE_RUBRIQUE=1571625036018525&LANGUE=1",
@@ -16,6 +23,6 @@
       "method": "feed"
     }
   ],
-  "post_count": 12,
-  "fetched": "2026-10-10T13:15:00Z"
+  "post_count": 21,
+  "fetched": "2026-10-17T14:53:57Z"
 }
