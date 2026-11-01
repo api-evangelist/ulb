@@ -1,4 +1,4 @@
-# Université libre de Bruxelles (ulb)
+# Université libre de Bruxelles
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,94 +64,136 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Université libre de Bruxelles (ULB) is a French-speaking research university in Brussels, Belgium, founded in 1834 and funded through the Fédération Wallonie-Bruxelles. Unusually for a university, ULB operates its research infrastructure itself rather than renting it: there is no Figshare, Elsevier Pure, Dataverse or Ex Libris Esploro tenant under ULB's name, and the one documented API it publishes is its own engineering. Every surface profiled here is `x-operator: institution`; none is a vendor's contract running under the university's name.
+Université libre de Bruxelles (ULB) is a French-speaking research university in Brussels, Belgium, founded in 1834 and funded through the Fédération Wallonie-Bruxelles. Unusually for this cohort, ULB operates its research infrastructure itself rather than renting it: there is no Figshare, Elsevier Pure, Dataverse or Ex Libris Esploro tenant under ULB's name, and the one documented API it publishes is its own engineering. DI-fusion, the institutional repository run by the ULB Libraries, exposes a bespoke HTTP export service at difusion-svc.ulb.ac.be that renders a scholar's or a group's publication list in APA, BibTeX, RIS, CSV and three ULB XML formats, documented in a 15-page PDF the library publishes itself. ULB also runs a Shibboleth SAML 2.0 identity provider registered in the Belnet R&E Federation and visible in eduGAIN, an OAI-PMH endpoint and an OpenSearch description on its self-hosted VuFind discovery layer, and mints its own info:ulb-repo/semantics/ publication-type vocabulary. The footprint is small and visibly under-maintained: the richest documented export format returns 403, the format added by the most recent documentation revision returns 500, the OAI-PMH endpoint answers Identify but rejects the metadata prefix it advertises so nothing can actually be harvested, the advertised unAPI server does not answer, and the DSpace instance behind its full-text links is erroring. There is no developer portal, no changelog, no status page, no OpenAPI of ULB's own, and every other ULB system — timetable, registrar, library discovery, researcher CVs — is behind the central ULB login or unreachable from the public internet.
 
-- APIs.json: https://raw.githubusercontent.com/api-evangelist/ulb/refs/heads/main/apis.yml
-- Run with Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=ulb-api-evangelist&utm_content=repo
+**Areas:** University · Higher Education · Education · Belgium · Europe · Research · Research Data · Institutional Repository · Open Access · Identity Federation · OAI-PMH · Library
 
-## Type
+## Université libre de Bruxelles on APIs.io
 
-- university — Public Research University
-- Index
-- Provider
-- Public
+Everything profiled for Université libre de Bruxelles is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/ulb/](https://apis.io/providers/ulb/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (5)
 
-University, Higher Education, Education, Belgium, Europe, Research, Research Data, Institutional Repository, Open Access, Identity Federation, OAI-PMH, Library
+- [DI-fusion OpenSearch Description](https://apis.io/apis/ulb/difusion-opensearch/) — OpenSearch 1.1 description document for the DI-fusion discovery interface, allowing a client to register DI-fusion as a search provider and construct query…
+- [ULB Shibboleth Identity Provider (SAML 2.0 metadata)](https://apis.io/apis/ulb/shibboleth-idp/) — ULB's institutional SAML 2.0 identity provider publishes complete, unauthenticated metadata at https://auth.ulb.be/idp/metadata — IDPSSODescriptor and…
+- [Université libre de Bruxelles Group API](https://apis.io/apis/ulb/ulb-group-api/) — Publication lists for a group of ULB scholars.
+- [Université libre de Bruxelles OAI PMH API](https://apis.io/apis/ulb/ulb-oai-pmh-api/) — The six OAI-PMH 2.0 protocol verbs.
+- [Université libre de Bruxelles Scholar API](https://apis.io/apis/ulb/ulb-scholar-api/) — Publication lists for one identified ULB scholar.
 
-## APIs
+### Published properties
 
-All four surfaces are operated by ULB itself, on ULB's own registrable domains (`ulb.be`, `ulb.ac.be`).
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- **DI-fusion Export API** — `https://difusion-svc.ulb.ac.be` — bespoke ULB service exporting a scholar's or group's publication list in APA, BibTeX, RIS, CSV and three ULB XML formats. No credential required. Documented by the ULB Libraries in a 15-page PDF. Verified live 2026-08-30. [OpenAPI](openapi/ulb-difusion-export-openapi.yml)
-- **DI-fusion OAI-PMH Harvesting Endpoint** — `https://difusion.ulb.ac.be/vufind/OAI/Server` — answers `Identify` and `ListMetadataFormats` with valid OAI-PMH 2.0 documents, but rejects the `oai_dc` prefix it advertises on every record-bearing verb. Present, registered, and not harvestable. [OpenAPI](openapi/ulb-difusion-oai-pmh-openapi.yml)
-- **DI-fusion OpenSearch Description** — `https://difusion.ulb.ac.be/vufind/Search/OpenSearch` — OpenSearch 1.1 description for the self-hosted VuFind discovery layer. HTTP 200.
-- **ULB Shibboleth Identity Provider (SAML 2.0 metadata)** — `https://auth.ulb.be/idp/metadata` — complete, unauthenticated SAML 2.0 metadata for entityID `https://auth.ulb.be/idp`, registered in the Belnet R&E Federation and published to eduGAIN. Carries the REFEDS Research & Scholarship entity category and SIRTFI assurance certification. The most complete contract ULB publishes.
+#### JSON Schema (1)
 
-## What was measured, and what is broken
+The data models the API reads and writes.
 
-Probed 2026-08-30. Every row is a status code, not a link.
+- [DI-fusion publication list (xml-brief)](https://apis.io/schemas/ulb/ulb-difusion-publist/)
 
-| Surface | Result |
+#### JSON-LD (1)
+
+Linked-data contexts for the provider's vocabulary.
+
+- [Ulb Context](https://apis.io/jsonld/ulb/ulb-context/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Université libre de Bruxelles — difusion rules](https://apis.io/rules/ulb/ulb-difusion-rules/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Ulb Authentication](https://apis.io/security/ulb/ulb-authentication/)
+- [Ulb Domain Security](https://apis.io/security/ulb/ulb-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Ulb Scopes](https://apis.io/scopes/ulb/ulb-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Ulb Plans Pricing](https://apis.io/plans/ulb/ulb-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Ulb Rate Limits](https://apis.io/rate-limits/ulb/ulb-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Ulb Finops](https://apis.io/finops/ulb/ulb-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.ulb.be/en)
+- [Documentation](https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE)
+- [Support](https://www.ulb.be/en/contact-us)
+- [Blog](https://www.ulb.be/fr/actus-et-agenda)
+- [Terms of service](https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use)
+- [Privacy policy](https://www.ulb.be/fr/mentions-legales/politique-de-protection-des-donnees-a-lulb)
+- [GitHub](https://github.com/ulb)
+
+## API Evangelist rating
+
+**Kin Score 32.2** — thin · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
 |---|---|
-| `GET /scholar` (xml-brief, apa/pdf, bibtex, ris, csv) | 200, live bibliographic data |
-| `reftype=xml-full` | **403** — the richest documented format, five pages of ULB's own PDF, is not publicly reachable |
-| `reftype=xml-brief-ext` | **500** — the format added by the 03/2023 documentation revision |
-| missing mandatory param, unknown `scholarID` | **500** Tomcat page, never a 4xx |
-| OAI-PMH `verb=Identify` | valid protocol document under **HTTP 500**, with `Unknown Action` and a full HTML page appended after `</OAI-PMH>` |
-| OAI-PMH `ListRecords&metadataPrefix=oai_dc` | 200 `badArgument: Missing Metadata Prefix` — **nothing is harvestable** |
-| OAI-PMH `<request>` echo | `http://digital.library.villanova.edu/OAIServer.php` — the unmodified VuFind demo default |
-| unAPI server (advertised in the DI-fusion HTML head) | port 8080 does not answer |
-| `dipot.ulb.ac.be` (DSpace, serves the full-text links) | **500** "DSpace at ULB: Internal system error" |
-| `gehol.ulb.be` (timetable), `cible.ulb.be` (discovery) | resolve in DNS, TCP times out — not assessable |
-| `llms.txt`, `.well-known/security.txt` | 404 |
+| Discoverability | 71.4 |
+| Contract quality | 27.6 |
+| Contract governance | 15.2 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 38.1 |
+| Access clarity | 26.3 |
 
-DI-fusion is registered as an OAI-PMH compliant repository in OpenDOAR, ROAR and Sherpa. A harvester that trusts that registration will collect nothing.
+**Agent readiness 20.1** — agent-aware
 
-## Domain standards (Kin Score `education` regime)
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | na |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | na |
+| Error Semantics | — |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | derived (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | na |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
 
-Met: `saml`, `shibboleth`. Partial: `oai-pmh` (present, not harvestable). Documented but unverifiable: `orcid`. Absent, with no public evidence: `scim`, `lti`, `oneroster`, `ed-fi`, `caliper`, `qti`, `datacite`, `crossref`. Full evidence in [conformance/ulb-domain-standards.yml](conformance/ulb-domain-standards.yml).
+**Regulatory alignment 34.3** — Education & Research
 
-## Artifacts
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/ulb/](https://apis.io/providers/ulb/).
 
-- [openapi/](openapi/) — two OpenAPI 3.1 descriptions (`derived`; ULB publishes none of its own), with pristine copies in [openapi/_original/](openapi/_original/)
-- [json-schema/](json-schema/) — the xml-brief publication-list shape
-- [examples/](examples/) — seven verbatim captured responses, each with request, status and byte count in [examples/index.yml](examples/index.yml)
-- [vocabulary/](vocabulary/) — ULB's own `info:ulb-repo/semantics/` publication-type namespace plus the groupBy, roles, markup and reftype/filetype vocabularies
-- [errors/](errors/) — eleven measured failure modes
-- [rules/](rules/) — fifteen consumption rules, including the GDPR rule against enumerating matricules
-- [authentication/](authentication/), [scopes/](scopes/), [conformance/](conformance/), [lifecycle/](lifecycle/)
-- [plans/](plans/ulb-plans-pricing.yml), [rate-limits/](rate-limits/ulb-rate-limits.yml), [finops/](finops/ulb-finops.yml), [security/](security/ulb-domain-security.yml)
+## How this profile is made
 
-## Timestamps
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
 
-- Created: 2026-06-03
-- Modified: 2026-08-30
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Université libre de Bruxelles: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
 
-## Common Properties
+## Open an issue
 
-- Website: https://www.ulb.be/en
-- Portal (DI-fusion): https://difusion.ulb.ac.be/
-- Research Repository: https://bib.ulb.be/en/find-documents/di-fusion
-- Documentation (DI-fusion – Download & API, PDF): https://bib.ulb.be/medias/fichier/difusion-download-and-api_1678451163130-pdf?ID_FICHE=10054&INLINE=FALSE
-- Identity Federation: https://auth.ulb.be/idp/metadata
-- Library Catalog: https://bib.ulb.be/en
-- Course Catalog: https://www.ulb.be/fr/se-former/catalogue-des-formations
-- AI Policy: https://www.ulb.be/fr/intelligence-artificielle/note-dintention-relative-aux-outils-dia-dans-lenseignement-a-lulb
-- AI Tooling (AcademIA): https://www.ulb.be/fr/intelligence-artificielle/academ-ia
-- GitHub Organization: https://github.com/ulb
-- Terms of Service: https://bib.ulb.be/en/find-documents/di-fusion/terms-of-use
-- Privacy Policy: https://www.ulb.be/fr/mentions-legales/politique-de-protection-des-donnees-a-lulb
-- Support: https://www.ulb.be/en/contact-us
-- Blog: https://www.ulb.be/fr/actus-et-agenda
-- LinkedIn: https://be.linkedin.com/school/universite-libre-de-bruxelles/
-- ROR: https://ror.org/01r9htc13
-
-## Notes
-
-Re-profiled 2026-08-30 under the API Evangelist university pipeline, which settles operator attribution before saving anything. The previous profile held three `apis[]` entries with no `x-operator`, one of which carried no base URL at all and was invisible to the cohort audit. Nothing vendor-attributed was found to remove — ULB is one of the few institutions in this cohort with no vendor tenant. The scholar and group exports were consolidated into the single contract they belong to, and the OAI-PMH, OpenSearch and SAML surfaces were located, probed and given real base URLs. No public student/SIS, timetable, library discovery or open-data API was found; the timetable and discovery hosts exist but do not answer from the public internet. No endpoints were fabricated.
-
-## Maintainers
-
-- Kin Lane — kin@apievangelist.com
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/ulb/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
